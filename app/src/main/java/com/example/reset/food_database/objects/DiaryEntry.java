@@ -14,21 +14,48 @@ public class DiaryEntry {
     private int id;
     private String foodname;
     private int kcal;
-    private int portion;
+    private double portion;
     private String getDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         Date date = new Date();
         return dateFormat.format(date);
     }
-    private String unit;
+    private Date date;
+    private Unit unit;
+    private double quantity;
 
     //getter & setter
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public double setQuantity(double quantity) {
+        return this.quantity = quantity;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
     }
 
     public String getFoodname() {
@@ -47,20 +74,16 @@ public class DiaryEntry {
         this.kcal = kcal;
     }
 
-    public int getPortion() {
+    public double getPortion() {
         return portion;
     }
 
-    public void setPortion(int portion) {
+    public void setPortion(double portion) {
         this.portion = portion;
     }
 
-    public String getUnit() {
-        return unit;
-    }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public DiaryEntry() {
     }
 
     //constructor
@@ -69,7 +92,25 @@ public class DiaryEntry {
         this.foodname = foodname;
         this.kcal = kcal;
         this.portion = portion;
+        this.unit = new Unit(unit);
+    }
+
+    public DiaryEntry(int id, String foodname, int kcal, int portion, Unit unit) {
+        this.id = id;
+        this.foodname = foodname;
+        this.kcal = kcal;
+        this.portion = portion;
         this.unit = unit;
+    }
+
+    public DiaryEntry(int id, String foodname, int kcal, double portion, Date date, Unit unit, double quantity) {
+        this.id = id;
+        this.foodname = foodname;
+        this.kcal = kcal;
+        this.portion = portion;
+        this.date = date;
+        this.unit = unit;
+        this.quantity = quantity;
     }
 
     //to String

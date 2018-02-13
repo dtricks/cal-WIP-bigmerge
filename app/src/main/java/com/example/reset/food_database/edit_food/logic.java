@@ -49,7 +49,7 @@ public class logic {
 
         fillSpinner();
 
-        gui.getUnitEditSpinner().setSelection(getIndex(gui.getUnitEditSpinner(), currentFood.getUnit()));
+        gui.getUnitEditSpinner().setSelection(getIndex(gui.getUnitEditSpinner(), currentFood.getUnit().getName()));
 
 
     }

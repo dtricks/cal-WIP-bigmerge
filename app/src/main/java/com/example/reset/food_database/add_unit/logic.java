@@ -2,6 +2,7 @@ package com.example.reset.food_database.add_unit;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.reset.food_database.DatabaseHandler;

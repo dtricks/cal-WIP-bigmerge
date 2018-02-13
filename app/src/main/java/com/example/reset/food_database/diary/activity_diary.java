@@ -8,6 +8,7 @@ import android.widget.SearchView;
 import com.example.reset.food_database.BaseActivity;
 import com.example.reset.food_database.DatabaseHandler;
 import com.example.reset.food_database.R;
+import com.example.reset.food_database.list_food.list_food;
 import com.example.reset.food_database.objects.Food;
 
 import java.util.ArrayList;

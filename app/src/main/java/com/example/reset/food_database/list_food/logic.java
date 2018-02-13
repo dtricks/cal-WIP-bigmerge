@@ -4,6 +4,21 @@ package com.example.reset.food_database.list_food;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.example.reset.food_database.DatabaseHandler;
+import com.example.reset.food_database.objects.Food;
+import android.app.AlertDialog;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import com.example.reset.food_database.DatabaseHandler;
@@ -27,13 +42,11 @@ public class logic {
     private List<Food> foodList = new ArrayList<Food>();
     List<String> stringList = new ArrayList<String>();
 
-
     public logic(Activity act, database data, gui gui) {
         super();
         this.data = data;
         this.gui = gui;
         activity = act;
-
 
 
         fillList();
@@ -48,89 +61,103 @@ public class logic {
         activity.startActivity(myIntent);
     }
 
-            //creates counter to find the right id of the clicked value
-            public void itemClicked(String selectedItem){
+    //creates counter for Searchview to get the right id while using the filter function
+    public void itemClicked(String selectedItem){
 
-                int counter = 0;
+        int counter = 0;
 
-                for(int i=0; i < stringList.size(); i++)
-                {
-                    if(stringList.get(i).equals(selectedItem))
-                    {
-                        counter = i;
-                    }
-                }
-
-                final int selectedItemId = counter;
-
-            //opens Dialog with the 3 choices edit food, delete food, add food to diary
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle("What would You like to do with your choosen food?");
-
-            //leads user to addtodiary
-            builder.setPositiveButton("Add to Diary",
-                    new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-
-                            int foodID = foodList.get(selectedItemId).getId();
-
-                            Food food = foodList.get(selectedItemId);
-
-                            Toast.makeText(activity, food.toString(), Toast.LENGTH_LONG).show();
-
-                        }
-                    });
-
-            //leads user to editfood + handover the chosen foods id
-            builder.setNeutralButton("Edit",
-                    new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            Intent alertIntent = new Intent(activity, com.example.reset.food_database.edit_food.init.class);
-                            alertIntent.putExtra("handoverId", foodList.get(selectedItemId).getId());
-                            activity.startActivity(alertIntent);
-                        }
-                    });
-
-            //deletes the clicked food
-            builder.setNegativeButton("Delete",
-                    new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            final int foodID = foodList.get(selectedItemId).getId();
-
-                            AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(activity);
-                            deleteConfirm.setTitle("Delete Food?");
-                            deleteConfirm.setMessage("Do you really want to delete this permanently?");
-
-                            deleteConfirm.setPositiveButton("Yes",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            DatabaseHandler db = new DatabaseHandler(activity);
-
-                                            if(db.deleteFood(foodID)){
-                                                Toast.makeText(activity, foodList.get(selectedItemId).getName() + " has been successfully deleted!", Toast.LENGTH_SHORT).show();
-                                                fillList();
-                                            }
-                                            else{
-                                                Toast.makeText(activity, "Deleting was NOT successful!", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });
-                            deleteConfirm.setNegativeButton("No", null) // Do nothing on no
-                                    .show();
-
-
-                        }
-                    });
-            builder.create().show();
-
+        for(int i=0; i < stringList.size(); i++)
+        {
+            if(stringList.get(i).equals(selectedItem))
+            {
+                counter = i;
+            }
         }
+
+        final int selectedItemId = counter;
+
+        //opens Dialog with the 3 choices edit food, delete food, add food to diary
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("What would You like to do with your choosen food?");
+
+        //leads user to addtodiary
+        builder.setPositiveButton("Add to Diary",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+
+                        int foodID = foodList.get(selectedItemId).getId();
+
+                        Intent alertIntent = new Intent(activity, com.example.reset.food_database.addtodiary.init.class);
+                        alertIntent.putExtra("handoverId", foodList.get(selectedItemId).getId());
+                        activity.startActivity(alertIntent);
+
+                        //for testing purposes TODO remove
+                        Toast.makeText(activity, foodList.get(selectedItemId).toString(), Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+        //leads user to editfood + handover the chosen foods id
+        builder.setNeutralButton("Edit",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Intent alertIntent = new Intent(activity, com.example.reset.food_database.edit_food.init.class);
+                        alertIntent.putExtra("handoverId", foodList.get(selectedItemId).getId());
+                        activity.startActivity(alertIntent);
+                    }
+                });
+
+        //deletes the clicked food
+        builder.setNegativeButton("Delete",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        int foodID = foodList.get(selectedItemId).getId();
+
+
+                        DatabaseHandler db = new DatabaseHandler(activity);
+
+                        if(db.deleteFood(foodID)){
+                            Toast.makeText(activity, foodList.get(selectedItemId).getName() + " has been successfully deleted!", Toast.LENGTH_SHORT).show();
+                            fillList();
+                        }
+                        else{
+                            Toast.makeText(activity, "Deleting was NOT successful!", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+        builder.create().show();final int foodID = foodList.get(selectedItemId).getId();
+
+        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(activity);
+        deleteConfirm.setTitle("Delete Food?");
+        deleteConfirm.setMessage("Do you really want to delete this permanently?");
+
+        deleteConfirm.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DatabaseHandler db = new DatabaseHandler(activity);
+
+                        if(db.deleteFood(foodID)){
+                            Toast.makeText(activity, foodList.get(selectedItemId).getName() + " has been successfully deleted!", Toast.LENGTH_SHORT).show();
+                            fillList();
+                        }
+                        else{
+                            Toast.makeText(activity, "Deleting was NOT successful!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        deleteConfirm.setNegativeButton("No", null) // Do nothing on no
+                .show();
+
+
+    }
 
     //sets up the search
     private void setupSearchView() {
@@ -150,7 +177,7 @@ public class logic {
         for (Food object: foodList) {
             double quantity = object.getQuantity();
             String quantityBearbeitet =  String.format(((quantity % 1.0D) == 0.0D) ? "%.0f" : "%.1f", quantity);
-            String unitName = object.getUnit();
+            String unitName = object.getUnit().getName();
             String foodName = object.getName();
             String kcal = Integer.toString(object.getKcal());
             foodAdapter.add(quantityBearbeitet + " " + unitName + " " + foodName + " (" + kcal + " kcal)");

@@ -3,6 +3,13 @@ package com.example.reset.food_database;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,6 +22,14 @@ import com.example.reset.food_database.objects.Food;
 import com.example.reset.food_database.objects.RecipeIngredient;
 import com.example.reset.food_database.objects.Unit;
 import com.example.reset.food_database.objects.Recipes;
+import android.widget.Toast;
+
+import com.example.reset.food_database.objects.DiaryEntry;
+import com.example.reset.food_database.objects.Food;
+import com.example.reset.food_database.objects.Settings;
+import com.example.reset.food_database.objects.Unit;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Oliver Gras
@@ -48,6 +63,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     private static final String DIARYENTRY_COLUMN_PORTION = "portion";
     private static final String DIARYENTRY_COLUMN_DATE = "date";
     private static final String DIARYENTRY_COLUMN_UNIT = "unit";
+    private static final String DIARYENTRY_COLUMN_QUANTITY = "quantity";
 
     //databasetable for  Recipe
     private static final String RECIPE_NAME = "Recipes";
@@ -95,7 +111,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         String CREATE_DIARYENTRY_TABLE = "CREATE TABLE " + DIARYENTRY_NAME + "("
                 + DIARYENTRY_ID + " INTEGER PRIMARY KEY," + DIARYENTRY_COLUMN_FOOD + " TEXT,"
                 + DIARYENTRY_COLUMN_KCAL + " INTEGER," + DIARYENTRY_COLUMN_PORTION + " DOUBLE,"
-                + DIARYENTRY_COLUMN_DATE + " DATE," + DIARYENTRY_COLUMN_UNIT + " TEXT)";
+                + DIARYENTRY_COLUMN_DATE + " DATE," + DIARYENTRY_COLUMN_UNIT + " TEXT,"
+                + DIARYENTRY_COLUMN_QUANTITY + " DOUBLE)";
         db.execSQL(CREATE_DIARYENTRY_TABLE);
 
         //create Table recipe
@@ -147,8 +164,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
-    //creates a new food entry
-    public void insertFood(String name, int kcal, double quantity, String unit) {
+    public void insertFood(String name, int kcal, double quantity, int unit) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String insertSQL = "INSERT INTO " + FOOD_NAME + " (" + FOOD_COLUMN_NAME
@@ -179,6 +195,25 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         Log.d("database", "kcal: "+ kcal);
         db.execSQL(insertSQL);
         Log.d("database", "kcal: "+ kcal);
+    }
+
+    public void insertDiaryEntry ( String foodName, int kcal, double portion, Unit unit, Date date, double quantity) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String insertSQL  = "INSERT INTO " + DIARYENTRY_NAME + " ("
+                + DIARYENTRY_COLUMN_FOOD + ", "
+                + DIARYENTRY_COLUMN_KCAL + ", "
+                + DIARYENTRY_COLUMN_PORTION + ", "
+                + DIARYENTRY_COLUMN_DATE + ", "
+                + DIARYENTRY_COLUMN_UNIT + ", "
+                + DIARYENTRY_COLUMN_QUANTITY + ") "
+                +"VALUES ('"
+                + foodName + "', '"
+                + Integer.toString(kcal) + "', '"
+                + Double.toString(portion) + "', '"
+                + date.toString() + "', '" //TODO could be dangerous with the locale and date formatting
+                + unit.getName() + "', '"
+                + Double.toString(quantity) + "') ";
+        db.execSQL(insertSQL);
     }
 
     //returns a Unit names as a list of Strings
@@ -228,7 +263,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 food.setName(cursor.getString(1));
                 food.setKcal(cursor.getInt(2));
                 food.setQuantity(cursor.getDouble(3));
-                food.setUnit(cursor.getString(4));
+                food.setUnit(getUnit_new(cursor.getInt(4)));
                 //list.add(cursor.getString(3) + " " + cursor.getString(4) + " " + cursor.getString(1) + " (" + cursor.getString(2) + " kcal)");
             }while(cursor.moveToNext());
         }
@@ -239,12 +274,12 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     //get new Recipe (some valus are missing)
     public Recipes getRecipe_new(int id) {
-        Recipes recipe = new Recipes(id,"",0);
+        Recipes recipe = new Recipes(id, "", 0);
         String selectQuery = "SELECT * FROM " + RECIPE_NAME + " WHERE " + RECIPE_ID + " = " + "'" + id + "'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
-            do{
+            do {
                 recipe.setId(cursor.getInt(0));
                 recipe.setName(cursor.getString(1));
                 recipe.setKcal(cursor.getInt(2));
@@ -252,20 +287,63 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 //recipe.setUnit(getUnit_new(cursor.getInt(4)));
                 //list.add(cursor.getString(3) + " " + cursor.getString(4) + " " + cursor.getString(1) + " (" + cursor.getString(2) + " kcal)");
             }while(cursor.moveToNext());
-        }
+    }
         cursor.close();
         db.close();
         return recipe;
+}
+    public DiaryEntry getDiaryEntry_old(int id) {
+        DiaryEntry diaryEntry=new DiaryEntry();
+        String selectQuery = "SELECT * FROM " + FOOD_NAME + " WHERE " + FOOD_ID + " = " + "'" + id + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst() && !cursor.isNull(1)) {
+            do{
+                diaryEntry.setId(cursor.getInt(0));
+                diaryEntry.setFoodname(cursor.getString(1));
+                diaryEntry.setKcal(cursor.getInt(2));
+                diaryEntry.setPortion(cursor.getDouble(3));
+                Date date =new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat();
+                try {
+                    date = sdf.parse(cursor.getString(4));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    cursor.getString(4);
+                }
+                diaryEntry.setDate(date);
+                Log.d(TAG, "getDiaryEntry: " +date.toString());
+                Log.d(TAG, "getDiaryEntry: " +cursor.getString(5));
+                diaryEntry.setUnit(new Unit(cursor.getInt(0), cursor.getString(5)));
+                diaryEntry.setQuantity(cursor.getDouble(6));
+
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return diaryEntry;
     }
 
-    //gets settings for the settings
+    public DiaryEntry getDiaryEntry(int id) {
+        List<DiaryEntry> diaryEntryList=getDiaryEntryList();
+        DiaryEntry diaryEntry=new DiaryEntry();
+        for (DiaryEntry diaryEntryFromList: diaryEntryList
+             ) {
+            if (diaryEntryFromList.getId()==id)
+                diaryEntry=diaryEntryFromList;
+        }
+        return diaryEntry;
+    }
+
     public int getSettings() {
         int settingsMaxKcal;
         String selectQuery = "SELECT * FROM " + SETTINGS_NAME + " WHERE " + SETTINGS_ID + " = " + "'" + 1 + "'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursor.moveToFirst();
-                settingsMaxKcal = cursor.getInt(1);
+        settingsMaxKcal = cursor.getInt(1);
         cursor.close();
         db.close();
         return settingsMaxKcal;
@@ -345,7 +423,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 food.setName(cursor.getString(1));
                 food.setKcal(cursor.getInt(2));
                 food.setQuantity(cursor.getDouble(3));
-                food.setUnit(cursor.getString(4));
+                food.setUnit(getUnit_new(cursor.getInt(4)));
                 list.add(food);
             }while(cursor.moveToNext());
         }
@@ -373,6 +451,32 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         cursor.close();
         db.close();
         return list;
+    }
+
+    public List<DiaryEntry> getDiaryEntryList() {
+        List<DiaryEntry> list = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + DIARYENTRY_NAME + " ORDER BY " + DIARYENTRY_COLUMN_FOOD + " ASC";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                DiaryEntry diaryEntry = new DiaryEntry();
+                diaryEntry.setId(cursor.getInt(0));
+                diaryEntry.setFoodname(cursor.getString(1));
+                diaryEntry.setKcal(cursor.getInt(2));
+                diaryEntry.setPortion(cursor.getDouble(3));
+                diaryEntry.setDate(new Date(cursor.getString(4)));
+                //diaryEntry.setUnit(getUnit_new(cursor.getInt(0)));
+                diaryEntry.setUnit(new Unit(cursor.getInt(0), cursor.getString(5)));
+                diaryEntry.setQuantity(cursor.getDouble(6));
+                list.add(diaryEntry);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return list;
+
     }
 
     // change to show inredients hier fehler beheben!
@@ -450,7 +554,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             SQLiteDatabase db = this.getReadableDatabase();
             db.execSQL(deleteQuery);
             db.close();
-            return true; //generic comment to test GitHub
+            return true;
         }
         catch(SQLException e)
         {
@@ -467,6 +571,21 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             db.execSQL(deleteQuery);
             db.close();
             return true; //generic comment to test GitHub
+        }
+        catch(SQLException e)
+        {
+            return false;
+        }
+    }
+
+    public boolean deleteDiaryEntry(int diaryEntryId){
+        try{
+            String deleteQuery = "DELETE FROM " + DIARYENTRY_NAME + " WHERE " +
+                    DIARYENTRY_ID + " = " + "'" + diaryEntryId + "'";
+            SQLiteDatabase db = this.getReadableDatabase();
+            db.execSQL(deleteQuery);
+            db.close();
+            return true;
         }
         catch(SQLException e)
         {
@@ -531,6 +650,14 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+    public void updateFood (int Id, String name, int kcal, double quantity, int unit) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String insertSQL  = "UPDATE " + FOOD_NAME +  " SET " +  FOOD_COLUMN_NAME + " = '" + name + "', " + FOOD_COLUMN_KCAL + " = " + kcal + ", "
+                + FOOD_COLUMN_QUANTITY + " = " + quantity + ", "  + FOOD_COLUMN_UNIT + " = " + unit
+                + " WHERE " + FOOD_ID + "=" + Id;
+        db.execSQL(insertSQL);
+    }
+
     //updates a portionsize in Recipe
     public void updatePortionInRecipe (int Id, double quantity) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -557,6 +684,18 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+    public void updateDiaryEntry (int diaryEntryId, String foodName, int kcal, double portion, Unit unit, Date date, double quantity) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String insertSQL  = "UPDATE " + DIARYENTRY_NAME + " SET "
+                + DIARYENTRY_COLUMN_FOOD + " = " + "'" +foodName +"'" +", "
+                + DIARYENTRY_COLUMN_KCAL + " = " + "'" +Integer.toString(kcal) +"'" +", "
+                + DIARYENTRY_COLUMN_PORTION + " = " + "'" +Double.toString(portion) +"'" +", "
+                + DIARYENTRY_COLUMN_DATE + " = " + "'" +date.toString()+"'" +", "//TODO add locale so that date formatting doesnt change
+                + DIARYENTRY_COLUMN_UNIT + " = " + "'" +unit.getName()+"'" +", "
+                + DIARYENTRY_COLUMN_QUANTITY + " = " + "'" +Double.toString(quantity)+"'" +""
+                +" WHERE "+ DIARYENTRY_ID + "="  +Integer.toString(diaryEntryId);
+        db.execSQL(insertSQL);
+    }
 }
 
 

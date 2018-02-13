@@ -1,4 +1,3 @@
-
 package com.example.reset.food_database.settings;
 
 import android.app.Activity;
@@ -34,12 +33,12 @@ public class logic {
     //clicking the button updates the kalories goal in the database
     public void submitSettingsButtonClicked(){
 
-    DatabaseHandler db = new DatabaseHandler(activity);
+        DatabaseHandler db = new DatabaseHandler(activity);
         db.getReadableDatabase();
 
-            db.updateSettings(Integer.parseInt(gui.getSettingsText().getText().toString()));
-            int newkcal = db.getSettings();
+        db.updateSettings(Integer.parseInt(gui.getSettingsText().getText().toString()));
+        int newkcal = db.getSettings();
 
-            Toast.makeText(activity, "Your daily calories goal has been set to " + newkcal + " !" , Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(activity, "Your daily calories goal has been set to " + newkcal + " !" , Toast.LENGTH_SHORT).show();
+    }
 }

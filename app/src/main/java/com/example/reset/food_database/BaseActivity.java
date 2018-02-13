@@ -8,7 +8,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.reset.food_database.diary.activity_diary;
+<<<<<<< HEAD
 //import com.example.reset.food_database.list_recipes.activity_list_recipes;
+=======
+import com.example.reset.food_database.list_food.list_food;
+import com.example.reset.food_database.list_recipes.activity_list_recipes;
+>>>>>>> origin/master
 
 /**
  * Created by Oliver Gras
@@ -32,7 +37,11 @@ public class BaseActivity extends AppCompatActivity  {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.diary:
+<<<<<<< HEAD
                 Intent myIntent = new Intent(getApplicationContext(), com.example.reset.food_database.foodlist_recipe.init.class);
+=======
+                Intent myIntent = new Intent(getApplicationContext(), com.example.reset.food_database.diary.init.class);
+>>>>>>> origin/master
                 startActivity(myIntent);
                 return true;
             case R.id.myfood:
@@ -40,13 +49,23 @@ public class BaseActivity extends AppCompatActivity  {
                 startActivity(myIntent1);
                 return true;
             case R.id.myrecipes:
+<<<<<<< HEAD
                 Intent myIntent2 = new Intent(getApplicationContext(), com.example.reset.food_database.list_recipes.init.class);
+=======
+                Intent myIntent2 = new Intent(getApplicationContext(), activity_list_recipes.class);
+>>>>>>> origin/master
                 startActivity(myIntent2);
                 return true;
             case R.id.mymaxkcal:
                 Intent myIntent3 = new Intent(getApplicationContext(), com.example.reset.food_database.settings.init.class);
                 startActivity(myIntent3);
                 return true;
+<<<<<<< HEAD
+=======
+            case R.id.statistics:
+                Intent myIntent4 = new Intent(getApplicationContext(), com.example.reset.food_database.statistics.init.class);
+                startActivity(myIntent4);
+>>>>>>> origin/master
             default:
                 return super.onOptionsItemSelected(item);
         }

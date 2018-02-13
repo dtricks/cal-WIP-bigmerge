@@ -13,11 +13,11 @@ public class Food {
     private String name;
     private int kcal;
     private double quantity;
-    private String unit;
+    private Unit unit;
     private int id;
 
     //constructor
-    public Food(String name, int kcal, double quantity, String unit, int id) {
+    public Food(String name, int kcal, double quantity, Unit unit, int id) {
         this.name = name;
         this.kcal = kcal;
         this.quantity = quantity;
@@ -25,14 +25,16 @@ public class Food {
         this.id = id;
     }
 
+    //to String
     @Override
     public String toString() {
+
         return "Food{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                " ,name='" + name + '\'' +
                 ", kcal=" + kcal +
                 ", quantity=" + quantity +
-                ", unit='" + unit + '\'' +
-                ", id=" + id +
+                ", unit=" + unit.getId() +
                 '}';
     }
 
@@ -41,7 +43,7 @@ public class Food {
     }
 
     //constructor
-    public Food(String name, int kcal, double quantity, String unit) {
+    public Food(String name, int kcal, double quantity, Unit unit) {
         this.name = name;
         this.kcal = kcal;
         this.quantity = quantity;
@@ -73,11 +75,11 @@ public class Food {
         this.quantity = quantity;
     }
 
-    public String getUnit() {
+    public Unit getUnit() {
         return unit;
     }
 
-    public void setUnit(String unit) {
+    public void setUnit(Unit unit) {
         this.unit = unit;
     }
 
