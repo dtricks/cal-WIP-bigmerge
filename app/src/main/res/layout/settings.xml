@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="10dp"
-        android:text="Please fill in Your daily KCAL goal:"/>
+        android:text="Please fill in Your daily kcal goal:"/>
 
     <EditText
         android:id="@+id/kcalmax"

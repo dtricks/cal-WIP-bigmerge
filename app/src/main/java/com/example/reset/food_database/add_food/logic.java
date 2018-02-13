@@ -1,6 +1,8 @@
 package com.example.reset.food_database.add_food;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +15,6 @@ import android.widget.Toast;
 
 import com.example.reset.food_database.DatabaseHandler;
 import com.example.reset.food_database.R;
-import com.example.reset.food_database.list_food.list_food;
 import com.example.reset.food_database.objects.Unit;
 
 import java.util.ArrayList;
@@ -48,26 +49,24 @@ public class logic {
         }
 
     }
-        //starts edit_unit
-        public void editUnitButtonClicked() {
+    //starts edit_unit
+    public void editUnitButtonClicked() {
 
-     //       final int selectedUnitItemId = counter;
+        String currentUnit = gui.getUnitSpinner().getSelectedItem().toString();
+        if(currentUnit.equals("g") ||currentUnit.equals("EL") ||currentUnit.equals("TL") || currentUnit.equals("Stueck") || currentUnit.equals("ml") || currentUnit.equals("Portion")) {
+            Toast.makeText(activity, "Units g, EL, TL, Stueck, ml & Portion can not be edited!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Intent intent = new Intent(activity, com.example.reset.food_database.edit_unit.init.class);
+            intent.putExtra("name", gui.getFoodnameText().getText().toString());
+            intent.putExtra("quantity", gui.getQuantityText().getText().toString());
+            intent.putExtra("kcal", gui.getKcalText().getText().toString());
+            intent.putExtra("current", currentUnit);
+            activity.startActivity(intent);
+        }
 
-            String currentUnit = gui.getUnitSpinner().getSelectedItem().toString();
-            if(currentUnit.equals("g") ||currentUnit.equals("EL") ||currentUnit.equals("TL") || currentUnit.equals("Stueck") || currentUnit.equals("ml") || currentUnit.equals("Portion")) {
-                Toast.makeText(activity, "Units g, EL, TL, Stueck, ml & Portion can not be edited!", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Intent intent = new Intent(activity, com.example.reset.food_database.edit_unit.init.class);
-                intent.putExtra("name", gui.getFoodnameText().getText().toString());
-                intent.putExtra("quantity", gui.getQuantityText().getText().toString());
-                intent.putExtra("kcal", gui.getKcalText().getText().toString());
-                Intent alertIntent = new Intent(activity, com.example.reset.food_database.edit_food.init.class);
-                //alertIntent.putExtra("handoverId", unitList.get(selectedItemId).getUnitId());
-                activity.startActivity(alertIntent);
-                activity.startActivity(intent);
-            }
     }
+
 
         //starts add unit
         public void addUnitButtonClicked() {
@@ -79,28 +78,44 @@ public class logic {
                 activity.startActivity(intent);
             }
 
-        //deletes the choosen unit from unitlist/spinner
-        public void deleteUnitButtonClicked() {
+    //deletes the choosen unit from unitlist/spinner
+    public void deleteUnitButtonClicked() {
 
-                String currentUnit = gui.getUnitSpinner().getSelectedItem().toString();
-                if(currentUnit.equals("g") ||currentUnit.equals("EL") ||currentUnit.equals("TL") || currentUnit.equals("Stueck") || currentUnit.equals("ml") || currentUnit.equals("Portion")) {
-                    Toast.makeText(activity, "Units g, EL, TL, Stueck, ml & Portion can not be deleted!", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    DatabaseHandler db = new DatabaseHandler(activity);
-                    if (db.deleteUnit(currentUnit) == true) {
-                        Toast.makeText(activity, currentUnit + " has been successfully deleted!", Toast.LENGTH_SHORT).show();
-                        fillSpinner();
-                    }
-                }
+
+
+        final String currentUnit = gui.getUnitSpinner().getSelectedItem().toString();
+        if(currentUnit.equals("g") ||currentUnit.equals("EL") ||currentUnit.equals("TL") || currentUnit.equals("Stueck") || currentUnit.equals("ml") || currentUnit.equals("Portion")) {
+            Toast.makeText(activity, "Units g, EL, TL, Stueck, ml & Portion can not be deleted!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            DatabaseHandler db = new DatabaseHandler(activity);
+            if (db.deleteUnit(currentUnit) == true) {
+
+                AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(activity);
+                deleteConfirm.setTitle("Delete Unit?");
+                deleteConfirm.setMessage("Do you really want to delete '" + currentUnit
+                        + "' permanently?");
+                deleteConfirm.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(activity, currentUnit + " has been successfully deleted!", Toast.LENGTH_SHORT).show();
+                                fillSpinner();
+                            }
+                        });
+                deleteConfirm.setNegativeButton("No", null) // Do nothing on no
+                        .show();
+
             }
+        }
+    }
 
         //saving food to footlist
         public void submitFoodButtonClicked() {
                 String foodText = gui.getFoodnameText().getText().toString();
                 String kcalText = gui.getKcalText().getText().toString();
                 String quantityText = gui.getQuantityText().getText().toString();
-                int unitText = unitList.get(gui.getUnitSpinner().getSelectedItemPosition()).getId();
+                String unitText = gui.getUnitSpinner().getSelectedItem().toString();
 
                 if (foodText.isEmpty() || kcalText.isEmpty() || quantityText.isEmpty() ) {
                     Toast.makeText(activity, "Please fill in the formular!", Toast.LENGTH_SHORT).show();

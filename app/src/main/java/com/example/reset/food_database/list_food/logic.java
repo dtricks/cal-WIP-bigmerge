@@ -19,6 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
+import com.example.reset.food_database.DatabaseHandler;
+import com.example.reset.food_database.objects.Food;
+import com.example.reset.food_database.objects.Recipes;
+
+import android.app.AlertDialog;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Oliver Gras
  */
@@ -122,7 +132,30 @@ public class logic {
 
                     }
                 });
-        builder.create().show();
+        builder.create().show();final int foodID = foodList.get(selectedItemId).getId();
+
+        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(activity);
+        deleteConfirm.setTitle("Delete Food?");
+        deleteConfirm.setMessage("Do you really want to delete this permanently?");
+
+        deleteConfirm.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DatabaseHandler db = new DatabaseHandler(activity);
+
+                        if(db.deleteFood(foodID)){
+                            Toast.makeText(activity, foodList.get(selectedItemId).getName() + " has been successfully deleted!", Toast.LENGTH_SHORT).show();
+                            fillList();
+                        }
+                        else{
+                            Toast.makeText(activity, "Deleting was NOT successful!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        deleteConfirm.setNegativeButton("No", null) // Do nothing on no
+                .show();
+
 
     }
 

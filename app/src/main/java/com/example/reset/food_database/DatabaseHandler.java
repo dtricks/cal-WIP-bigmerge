@@ -1,5 +1,8 @@
 package com.example.reset.food_database;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +17,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.example.reset.food_database.objects.Food;
+import com.example.reset.food_database.objects.RecipeIngredient;
+import com.example.reset.food_database.objects.Unit;
+import com.example.reset.food_database.objects.Recipes;
 import android.widget.Toast;
 
 import com.example.reset.food_database.objects.DiaryEntry;
@@ -67,8 +75,11 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     private static final String RECIPEINGREDIENTS_NAME = "Recipeingredients";
     private static final String RECIPEINGREDIENTS_ID = "id";
     private static final String RECIPEINGREDIENTS_RECIPEID = "recipeid";
-    private static final String RECIPEINGREDIENTS_FOODID = "foodid";
+    private static final String RECIPEINGREDIENTS_FOODNAME = "foodname";
+    private static final String RECIPEINGREDIENTS_UNIT = "unit";
+    private static final String RECIPEINGREDIENTS_KCAL = "kcal";
     private static final String RECIPEINGREDIENTS_COLUMN_QUANTITY = "quantity";
+    private static final String RECIPEINGREDIENTS_PORTION = "portion";
 
     //databasetable for Settings
     private static final String SETTINGS_NAME = "SETTINGS";
@@ -83,7 +94,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     //Creating Tables
-
     @Override
     public void onCreate(SQLiteDatabase db){
         //create Table unit
@@ -114,7 +124,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         //create Table recipeingredients
         String CREATE_RECIPEINGREDIENTS_TABLE = "CREATE TABLE " + RECIPEINGREDIENTS_NAME + "("
                 + RECIPEINGREDIENTS_ID + " INTEGER PRIMARY KEY,"  + RECIPEINGREDIENTS_RECIPEID + " INTEGER,"
-                + RECIPEINGREDIENTS_FOODID + " INTEGER,"+ RECIPEINGREDIENTS_COLUMN_QUANTITY+ " DOUBLE)";
+                + RECIPEINGREDIENTS_FOODNAME + " TEXT,"+ RECIPEINGREDIENTS_KCAL + " INTEGER," + RECIPEINGREDIENTS_UNIT + " TEXT," + RECIPEINGREDIENTS_PORTION + " DOUBLE,"+ RECIPEINGREDIENTS_COLUMN_QUANTITY+ " DOUBLE)";
         db.execSQL(CREATE_RECIPEINGREDIENTS_TABLE);
 
         //create Table settings
@@ -142,11 +152,13 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    //creates new unit in database
     public void insertUnit(SQLiteDatabase db, String unit){
         String insertSQL = "INSERT INTO " + UNIT_NAME + " ("+UNIT_COLUMN_NAME+") VALUES ('"+unit+"')";
         db.execSQL(insertSQL);
     }
 
+    //creates the new daily kalories goal
     public void insertSettings(SQLiteDatabase db, int dailies){
         String insertSQL = "INSERT INTO " + SETTINGS_NAME + " ("+SETTINGS_MAXKCAL+") VALUES ('"+dailies+"')";
         db.execSQL(insertSQL);
@@ -160,6 +172,29 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 "VALUES ('" + name + "', " + kcal + ", " + quantity + ", '" + unit + "')";
 
         db.execSQL(insertSQL);
+    }
+
+    public void insertRecipe(String name, int kcal) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String insertSQL = "INSERT INTO " + RECIPE_NAME + " (" + RECIPE_COLUMN_RECIPE
+                + ", " + RECIPE_COLUMN_KCAL + ") " +
+                "VALUES ('" + name + "', " + kcal + ")";
+
+        db.execSQL(insertSQL);
+    }
+
+    //creates a new food entry
+    public void insertRecipeingredient(int recipeId, String name, int kcal, double quantity, String unit, double portion) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String insertSQL = "INSERT INTO " + RECIPEINGREDIENTS_NAME + " (" + RECIPEINGREDIENTS_RECIPEID + ", " + RECIPEINGREDIENTS_FOODNAME + ", " + RECIPEINGREDIENTS_UNIT
+                + ", " + RECIPEINGREDIENTS_COLUMN_QUANTITY + ", " + RECIPEINGREDIENTS_KCAL + ", "  + RECIPEINGREDIENTS_PORTION + ") " +
+                "VALUES (" + recipeId + ", '" + name + "', '" + unit + "', " + quantity + ", " + kcal + ", " + portion + ")";
+
+        Log.d("database", "kcal: "+ kcal);
+        db.execSQL(insertSQL);
+        Log.d("database", "kcal: "+ kcal);
     }
 
     public void insertDiaryEntry ( String foodName, int kcal, double portion, Unit unit, Date date, double quantity) {
@@ -197,7 +232,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         return list;
     }
 
-
     //returns all Units as a list
     public List<Unit> getUnits_new() {
         List<Unit> list = new ArrayList<Unit>();
@@ -217,7 +251,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         return list;
     }
 
-
+    //gets food for foodlist listview
     public Food getFood_new(int id) {
         Food food=new Food();
         String selectQuery = "SELECT * FROM " + FOOD_NAME + " WHERE " + FOOD_ID + " = " + "'" + id + "'";
@@ -238,6 +272,26 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         return food;
     }
 
+    //get new Recipe (some valus are missing)
+    public Recipes getRecipe_new(int id) {
+        Recipes recipe = new Recipes(id, "", 0);
+        String selectQuery = "SELECT * FROM " + RECIPE_NAME + " WHERE " + RECIPE_ID + " = " + "'" + id + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                recipe.setId(cursor.getInt(0));
+                recipe.setName(cursor.getString(1));
+                recipe.setKcal(cursor.getInt(2));
+                //recipe.setQuantity(cursor.getDouble(3));
+                //recipe.setUnit(getUnit_new(cursor.getInt(4)));
+                //list.add(cursor.getString(3) + " " + cursor.getString(4) + " " + cursor.getString(1) + " (" + cursor.getString(2) + " kcal)");
+            }while(cursor.moveToNext());
+    }
+        cursor.close();
+        db.close();
+        return recipe;
+}
     public DiaryEntry getDiaryEntry_old(int id) {
         DiaryEntry diaryEntry=new DiaryEntry();
         String selectQuery = "SELECT * FROM " + FOOD_NAME + " WHERE " + FOOD_ID + " = " + "'" + id + "'";
@@ -296,6 +350,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
 
+    //gets unit
     public Unit getUnit_new(int id) {
         Unit unit = new Unit();
         String selectQuery = "SELECT * FROM " + UNIT_NAME + " WHERE " + UNIT_COLUMN_ID + " = " + "'" + id + "'";
@@ -315,6 +370,27 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         return unit;
     }
 
+    //gets unit
+    public Unit getUnitbyName(String name) {
+        Unit unit = new Unit();
+        String selectQuery = "SELECT * FROM " + UNIT_NAME + " WHERE " + UNIT_COLUMN_NAME + " = " + "'" + name + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do{
+                //food.setId(cursor.getInt(0));
+                unit.setId(cursor.getInt(0));
+                unit.setName(cursor.getString(1));
+            }while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return unit;
+    }
+
+    //gets food for list
     public List<String> getFood() {
         List<String> list = new ArrayList<String>();
         String selectQuery = "SELECT * FROM " + FOOD_NAME;
@@ -333,6 +409,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
 
 
+    //gets foodlist object for list
     public List<Food> getFoodList() {
         List<Food> list = new ArrayList<Food>();
         String selectQuery = "SELECT * FROM " + FOOD_NAME + " ORDER BY " + FOOD_COLUMN_NAME + " ASC";
@@ -348,6 +425,27 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 food.setQuantity(cursor.getDouble(3));
                 food.setUnit(getUnit_new(cursor.getInt(4)));
                 list.add(food);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+
+    //selects all recipes
+    public List<Recipes> getRecipeList() {
+        List<Recipes> list = new ArrayList<Recipes>();
+        String selectQuery = "SELECT * FROM " + RECIPE_NAME + " ORDER BY " + RECIPE_COLUMN_RECIPE + " ASC";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                Recipes recipes = new Recipes(1,"tmp",3);
+                recipes.setId(cursor.getInt(0));
+                recipes.setName(cursor.getString(1));
+                recipes.setKcal(cursor.getInt(2));
+                list.add(recipes);
             }while(cursor.moveToNext());
         }
         cursor.close();
@@ -381,9 +479,36 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     }
 
+    // change to show inredients hier fehler beheben!
+    public List<RecipeIngredient> getIngredientList(int recipeID) {
+        List<RecipeIngredient> list = new ArrayList<RecipeIngredient>();
+        String selectQuery = "SELECT * FROM " + RECIPEINGREDIENTS_NAME + " where " + RECIPEINGREDIENTS_RECIPEID +" = " + recipeID + " ORDER BY " + RECIPEINGREDIENTS_FOODNAME + " ASC";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                RecipeIngredient recipesingredient = new RecipeIngredient();
+                recipesingredient.setId(cursor.getInt(0));
+                recipesingredient.setRecipeId(cursor.getInt(1));
+                recipesingredient.setFoodname(cursor.getString(2));
+                recipesingredient.setKcal(cursor.getInt(3));
+                recipesingredient.setUnit(cursor.getString(4));
+                recipesingredient.setPortion(cursor.getDouble(5));
+                recipesingredient.setQuantity(cursor.getInt(6));
+
+                //diaryEntry.setUnit(new Unit(cursor.getInt(0), cursor.getString(5)));
+
+                list.add(recipesingredient);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
 
 
-
+    //checks if the unit is allready created
     public boolean doesUnitExist(String unit) {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -402,7 +527,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         return false; //die unit existiert noch nicht
     }
 
-    // Deletes category from database
+    // Deletes unit from database
     public boolean deleteUnit(String unit) {
 
         try{
@@ -420,7 +545,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     }
 
-
+    //deletes food form database
     public boolean deleteFood(int foodID){
 
         try{
@@ -435,8 +560,22 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         {
             return false;
         }
+    }
 
+    public boolean deleteRecipe(int recipeID){
 
+        try{
+            String deleteQuery = "DELETE FROM " + RECIPE_NAME + " WHERE " +
+                    RECIPE_ID + " = " + "'" + recipeID + "'";
+            SQLiteDatabase db = this.getReadableDatabase();
+            db.execSQL(deleteQuery);
+            db.close();
+            return true; //generic comment to test GitHub
+        }
+        catch(SQLException e)
+        {
+            return false;
+        }
     }
 
     public boolean deleteDiaryEntry(int diaryEntryId){
@@ -454,6 +593,63 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         }
     }
 
+    public boolean deleteIngredient(int recipeingredientID){
+
+        try{
+            String deleteQuery = "DELETE FROM " + RECIPEINGREDIENTS_NAME + " WHERE " +
+                    RECIPEINGREDIENTS_ID + " = " + "'" + recipeingredientID + "'";
+            SQLiteDatabase db = this.getReadableDatabase();
+            db.execSQL(deleteQuery);
+            db.close();
+            return true;
+        }
+        catch(SQLException e)
+        {
+            return false;
+        }
+    }
+
+    //Calculates KCAL for a Recipe
+  /*  public void CalculateKcal (int recipeID, double addKcal, int oldKcal) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int newKcal = 0;
+
+        newKcal = oldKcal + (int)addKcal;
+
+        String updateSQL  = "UPDATE " + RECIPE_NAME +  " SET " +  RECIPE_COLUMN_KCAL + " = '" + newKcal
+                + "' WHERE " + RECIPE_ID + "=" + recipeID;
+        db.execSQL(updateSQL);
+    }
+*/
+    //sets kcal in ingredientlist
+    public void calculateRecipeKcal (int recipeID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int newKcal = 0;
+
+        String selectQuery = "SELECT SUM(" + RECIPEINGREDIENTS_KCAL + ") From " + RECIPEINGREDIENTS_NAME + " WHERE " + RECIPEINGREDIENTS_RECIPEID + " = " + recipeID;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do{
+                newKcal = cursor.getInt(0);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+
+        String updateSQL  = "UPDATE " + RECIPE_NAME +  " SET " +  RECIPE_COLUMN_KCAL + " = '" + newKcal
+                + "' WHERE " + RECIPE_ID + "=" + recipeID;
+        db.execSQL(updateSQL);
+    }
+
+    //updates a food object in database
+    public void updateFood (int Id, String name, int kcal, double quantity, String unit) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String insertSQL  = "UPDATE " + FOOD_NAME +  " SET " +  FOOD_COLUMN_NAME + " = '" + name + "', " + FOOD_COLUMN_KCAL + " = " + kcal + ", "
+                + FOOD_COLUMN_QUANTITY + " = " + quantity + ", "  + FOOD_COLUMN_UNIT + " = '" + unit
+                + "' WHERE " + FOOD_ID + "=" + Id;
+        db.execSQL(insertSQL);
+    }
+
     public void updateFood (int Id, String name, int kcal, double quantity, int unit) {
         SQLiteDatabase db = this.getReadableDatabase();
         String insertSQL  = "UPDATE " + FOOD_NAME +  " SET " +  FOOD_COLUMN_NAME + " = '" + name + "', " + FOOD_COLUMN_KCAL + " = " + kcal + ", "
@@ -462,6 +658,17 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+    //updates a portionsize in Recipe
+    public void updatePortionInRecipe (int Id, double quantity) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String insertSQL  = "UPDATE " + RECIPEINGREDIENTS_NAME +  " SET " +  RECIPEINGREDIENTS_PORTION + " = '" + quantity
+                + "' WHERE " + RECIPEINGREDIENTS_ID + " = " + Id;
+        db.execSQL(insertSQL);
+        DatabaseHandler db2 = this;
+        //db2.calculateRecipeKcal();
+    }
+
+    //updates the settingsentry in database
     public void updateSettings (int maxkcal) {
         SQLiteDatabase db = this.getReadableDatabase();
         String insertSQL  = "UPDATE " + SETTINGS_NAME +  " SET " +  SETTINGS_MAXKCAL + " = " + maxkcal
@@ -469,17 +676,18 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+    //updates the unit
     public void updateUnit (int unitId, String unitName) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String insertSQL  = "UPDATE " + UNIT_NAME +  " SET " +  UNIT_COLUMN_NAME + " = " + unitName
-                + " WHERE " + SETTINGS_ID + "=" + unitId;
+        String insertSQL  = "UPDATE " + UNIT_NAME +  " SET " +  UNIT_COLUMN_NAME + " = '" + unitName
+                + "' WHERE " + UNIT_COLUMN_ID + "=" + unitId;
         db.execSQL(insertSQL);
     }
 
     public void updateDiaryEntry (int diaryEntryId, String foodName, int kcal, double portion, Unit unit, Date date, double quantity) {
         SQLiteDatabase db = this.getReadableDatabase();
         String insertSQL  = "UPDATE " + DIARYENTRY_NAME + " SET "
-                 + DIARYENTRY_COLUMN_FOOD + " = " + "'" +foodName +"'" +", "
+                + DIARYENTRY_COLUMN_FOOD + " = " + "'" +foodName +"'" +", "
                 + DIARYENTRY_COLUMN_KCAL + " = " + "'" +Integer.toString(kcal) +"'" +", "
                 + DIARYENTRY_COLUMN_PORTION + " = " + "'" +Double.toString(portion) +"'" +", "
                 + DIARYENTRY_COLUMN_DATE + " = " + "'" +date.toString()+"'" +", "//TODO add locale so that date formatting doesnt change
@@ -488,12 +696,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 +" WHERE "+ DIARYENTRY_ID + "="  +Integer.toString(diaryEntryId);
         db.execSQL(insertSQL);
     }
-
-
-
-
-
-
 }
 
 

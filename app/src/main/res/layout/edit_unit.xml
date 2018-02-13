@@ -23,6 +23,7 @@ android:layout_height="match_parent">
     android:layout_height="wrap_content"
     android:layout_below="@+id/editunitheader"
     android:inputType="text"
+    android:hint="unit"
     android:layout_margin="20dp"/>
 
 <Button

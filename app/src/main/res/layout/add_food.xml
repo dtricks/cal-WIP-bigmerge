@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/name_textfield"
         android:inputType="number"
-        android:hint="Kcal"
+        android:hint="kcal"
         android:layout_margin="20dp"/>
 
     <EditText

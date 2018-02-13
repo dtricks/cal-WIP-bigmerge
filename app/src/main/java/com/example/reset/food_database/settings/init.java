@@ -43,9 +43,5 @@ public class init extends BaseActivity {
         initApplicationLogic(this);
         initEventToListenerMapping(this);
     }
-
-
-
-
 }
 

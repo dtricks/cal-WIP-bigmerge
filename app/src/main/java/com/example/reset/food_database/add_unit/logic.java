@@ -11,7 +11,6 @@ import com.example.reset.food_database.DatabaseHandler;
  * Created by Annabella Peekhaus
  */
 
-
 //logic for adding a unit to the unit list/spinner
 public class logic {
 
@@ -26,9 +25,6 @@ public class logic {
             activity = act;
 
             Intent intent = activity.getIntent();
-
-
-
 
         }
 

@@ -1,12 +1,9 @@
 
-package com.example.reset.food_database.list_recipes;
+package com.example.reset.food_database.recipe_addtolist;
 
 import android.app.Activity;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 
 /**
@@ -15,39 +12,35 @@ import android.widget.ListView;
 
 //manages searchview, listview & clicklisteners for this activity
 //public class onClickListener implements android.widget.SearchView.OnQueryTextListener, ListView.OnItemClickListener  {
-public class onClickListener implements OnClickListener, android.widget.SearchView.OnQueryTextListener, ListView.OnItemClickListener {
+public class onClickListener implements OnClickListener {
 
     private Activity activity;
     private logic applicationLogic;
-    private com.example.reset.food_database.list_recipes.gui gui;
+    private com.example.reset.food_database.recipe_addtolist.gui gui;
 
-    public onClickListener(Activity act, com.example.reset.food_database.list_recipes.gui gui, logic appLogic) {
+    public onClickListener(Activity act, com.example.reset.food_database.recipe_addtolist.gui gui, logic appLogic) {
         super();
         this.gui = gui;
         applicationLogic = appLogic;
         activity = act;
         //this.gui.getAddFood().setOnClickListener(this);
-        this.gui.getAddRecipe().setOnClickListener(this);
-        this.gui.getRecipeSearch().setOnQueryTextListener(this);
-        this.gui.getRecipeList().setOnItemClickListener(this);
+        this.gui.getCreaterecipe().setOnClickListener(this);
+        this.gui.getRecipename().setOnClickListener(this);
+
 
     }
 
     @Override
     public void onClick(View view) {
 
-        if (view == gui.getAddRecipe()) {
-            applicationLogic.addRecipeButtonClicked();
+        if (view == gui.getCreaterecipe()) {
+            applicationLogic.createRecipeButtonClicked();
         }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final String selectedItem = (String) parent.getItemAtPosition(position);
-        applicationLogic.itemClicked(selectedItem);
-    }
 
 
+/*
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -61,6 +54,6 @@ public class onClickListener implements OnClickListener, android.widget.SearchVi
             gui.getRecipeList().setFilterText(newText.toString());
         }
         return true;
-    }
+    }*/
 
 }

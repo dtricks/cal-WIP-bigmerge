@@ -1,6 +1,6 @@
-/*
-package com.example.reset.food_database.list_food;
+package com.example.reset.food_database.list_ingredients;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,36 +12,41 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
-import android.app.AlertDialog;
-
 
 import com.example.reset.food_database.BaseActivity;
 import com.example.reset.food_database.DatabaseHandler;
 import com.example.reset.food_database.R;
 import com.example.reset.food_database.objects.Food;
-//import com.example.reset.food_database.util;
+import com.example.reset.food_database.objects.RecipeIngredient;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class list_food extends BaseActivity {
+//import com.example.reset.food_database.util;
+
+public class list_ingredients extends BaseActivity {
 
     Button addFood;
     ListView list;
+    ListView ingredientList;
+   // ListView listrecipetest;
     SearchView searchBar;
 
     List<Food> foodList = new ArrayList<Food>();
+    List<RecipeIngredient> ingredientListtest = new ArrayList<RecipeIngredient>();
 
-    DatabaseHandler database= new DatabaseHandler(list_food.this);
+    DatabaseHandler database= new DatabaseHandler(list_ingredients.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_food);
+        setContentView(R.layout.recipe_ingredients);
 
-        addFood = (Button)findViewById(R.id.addfood);
+        addFood = (Button)findViewById(R.id.addingredient);
         list = (ListView)findViewById(R.id.foodlist);
-        searchBar = (SearchView)findViewById(R.id.foodfilter);
+        searchBar = (SearchView)findViewById(R.id.ingredientfilter);
+
+        ingredientList = (ListView)findViewById(R.id.ingredientlist);
 
         addFood .setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -59,7 +64,7 @@ public class list_food extends BaseActivity {
                 final int selectedItemId = (int) parent.getItemIdAtPosition(position);
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(list_food.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(list_ingredients.this);
                 builder.setTitle("Was möchten Sie mit tun?");
                 //builder.setIcon(R.drawable.icon);
 
@@ -90,7 +95,7 @@ public class list_food extends BaseActivity {
                             public void onClick(DialogInterface dialog, int id)
                             {
                                 Intent alertIntent = new Intent(getApplicationContext(), com.example.reset.food_database.edit_food.init.class);
-                                alertIntent.putExtra("handoverId", foodList.get(selectedItemId).getId());
+                                alertIntent.putExtra("handoverId", ingredientListtest.get(selectedItemId).getId());
                                 startActivity(alertIntent);
                                 //Toast.makeText(getApplicationContext(), "TEST2", Toast.LENGTH_SHORT).show();
                                 // context.startActivity(new Intent(context, Setup.class));
@@ -103,21 +108,20 @@ public class list_food extends BaseActivity {
                         {
                             public void onClick(DialogInterface dialog, int id)
                             {
-                                int foodID = foodList.get(selectedItemId).getId();
+                                
+                                int recipeID = ingredientListtest.get(selectedItemId).getId();
 
 
                                 DatabaseHandler db = new DatabaseHandler(getApplicationContext());
 
-                                if(db.deleteFood(foodID)){
-                                    Toast.makeText(getApplicationContext(), foodList.get(selectedItemId).getName() + " wurde gelöscht!", Toast.LENGTH_SHORT).show();
-                                    fillList(list);
+                                if(db.deleteFood(recipeID)){
+                                    Toast.makeText(getApplicationContext(), ingredientListtest.get(selectedItemId).getFoodname() + " wurde gelöscht!", Toast.LENGTH_SHORT).show();
+                                    fillList(ingredientList);
                                 }
                                 else{
                                     Toast.makeText(getApplicationContext(), "Löschen nicht erfolgreich!", Toast.LENGTH_SHORT).show();
                                 }
 
-
-                                // dialog.cancel();
                             }
                         });
                 builder.create().show();
@@ -168,7 +172,7 @@ public class list_food extends BaseActivity {
             String unitName = object.getUnit();
             String foodName = object.getName();
             String kcal = Integer.toString(object.getKcal());
-            foodAdapter.add(quantityBearbeitet + " " + unitName + " " + foodName + " (" + kcal + " kcal)");
+            foodAdapter.add(quantityBearbeitet + " " + unitName + " " + foodName + " (" + kcal + " ktestcal)");
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -177,4 +181,3 @@ public class list_food extends BaseActivity {
         list.setAdapter(adapter);
     }
 }
-*/

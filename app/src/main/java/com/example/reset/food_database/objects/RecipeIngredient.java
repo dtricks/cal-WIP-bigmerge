@@ -9,20 +9,24 @@ public class RecipeIngredient {
 
     private int id;
     private int recipeId;
-    private String food;
+    private String foodname;
+    private String unit;
     private double quantity;
     private int kcal;
+    private double portion;
 
     //constructor
     public RecipeIngredient() {
     }
 
-    public RecipeIngredient(int id, int recipeId, String food, double quantity, int kcal) {
+    public RecipeIngredient(int id, int recipeId, String foodname, double quantity, int kcal, String unit, double portion) {
         this.id = id;
         this.recipeId = recipeId;
-        this.food = food;
+        this.foodname = foodname;
         this.quantity = quantity;
         this.kcal = kcal;
+        this.unit = unit;
+        this.portion = portion;
     }
 
     //getter & setter
@@ -42,12 +46,12 @@ public class RecipeIngredient {
         this.recipeId = recipeId;
     }
 
-    public String getFood() {
-        return food;
+    public String getFoodname() {
+        return foodname;
     }
 
-    public void setFood(String food) {
-        this.food = food;
+    public void setFoodname(String food) {
+        this.foodname = food;
     }
 
     public double getQuantity() {
@@ -66,6 +70,22 @@ public class RecipeIngredient {
         this.kcal = kcal;
     }
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public double getPortion() {
+        return portion;
+    }
+
+    public void setPortion(double portion) {
+        this.portion = portion;
+    }
+
     //to String
 
     @Override
@@ -73,9 +93,13 @@ public class RecipeIngredient {
         return "RecipeIngredient{" +
                 "id=" + id +
                 ", recipeId=" + recipeId +
-                ", food='" + food + '\'' +
+                ", foodname='" + foodname + '\'' +
+                ", unit='" + unit + '\'' +
                 ", quantity=" + quantity +
                 ", kcal=" + kcal +
+                ", portion=" + portion +
                 '}';
     }
+
+
 }

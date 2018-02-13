@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.example.reset.food_database.DatabaseHandler;
+import com.example.reset.food_database.objects.Unit;
 
 /**
  * Created by Annabella Peekhaus
@@ -15,6 +16,7 @@ public class logic {
     private Activity activity;
     private database data;
     private gui gui;
+    private Unit editCurrentUnit;
 
     public logic(Activity act, database data, gui gui) {
         super();
@@ -22,16 +24,19 @@ public class logic {
         this.gui = gui;
         activity = act;
 
+        //getting the Id of the food chosen in list_food
         Intent intent = activity.getIntent();
+        if (intent != null) {
+            DatabaseHandler db = new DatabaseHandler(activity);
+            db.getReadableDatabase();
+            editCurrentUnit = db.getUnitbyName(intent.getStringExtra("current"));
 
+        }
 
-
-
+        gui.getUnitText().setText(String.valueOf(editCurrentUnit.getName()));
     }
-
     //upgrades the unit which was chosen for editing
     public void submitEditUnitButtonClicked() {
-
         String indicatedUnit =  gui.getUnitText().getText().toString();
         DatabaseHandler db = new DatabaseHandler(activity);
 
@@ -44,7 +49,7 @@ public class logic {
 
         }
         else {
-            db.insertUnit(db.getWritableDatabase(), indicatedUnit);
+            db.updateUnit(editCurrentUnit.getId(),indicatedUnit);
 
             Toast.makeText(activity, "Unit " + indicatedUnit + " has been edited!", Toast.LENGTH_SHORT).show();
             Intent intent = activity.getIntent();

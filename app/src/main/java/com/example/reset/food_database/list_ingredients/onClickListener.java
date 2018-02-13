@@ -1,5 +1,5 @@
 
-package com.example.reset.food_database.list_recipes;
+package com.example.reset.food_database.list_ingredients;
 
 import android.app.Activity;
 import android.text.TextUtils;
@@ -19,24 +19,24 @@ public class onClickListener implements OnClickListener, android.widget.SearchVi
 
     private Activity activity;
     private logic applicationLogic;
-    private com.example.reset.food_database.list_recipes.gui gui;
+    private com.example.reset.food_database.list_ingredients.gui gui;
 
-    public onClickListener(Activity act, com.example.reset.food_database.list_recipes.gui gui, logic appLogic) {
+    public onClickListener(Activity act, com.example.reset.food_database.list_ingredients.gui gui, logic appLogic) {
         super();
         this.gui = gui;
         applicationLogic = appLogic;
         activity = act;
         //this.gui.getAddFood().setOnClickListener(this);
-        this.gui.getAddRecipe().setOnClickListener(this);
-        this.gui.getRecipeSearch().setOnQueryTextListener(this);
-        this.gui.getRecipeList().setOnItemClickListener(this);
+        this.gui.getAddIngredient().setOnClickListener(this);
+        this.gui.getIngredientfilter().setOnQueryTextListener(this);
+        this.gui.getIngredientList().setOnItemClickListener(this);
 
     }
 
     @Override
     public void onClick(View view) {
 
-        if (view == gui.getAddRecipe()) {
+        if (view == gui.getAddIngredient()) {
             applicationLogic.addRecipeButtonClicked();
         }
     }
@@ -56,9 +56,9 @@ public class onClickListener implements OnClickListener, android.widget.SearchVi
     @Override
     public boolean onQueryTextChange(String newText) {
         if (TextUtils.isEmpty(newText)) {
-            gui.getRecipeList().clearTextFilter();
+            gui.getIngredientList().clearTextFilter();
         } else {
-            gui.getRecipeList().setFilterText(newText.toString());
+            gui.getIngredientList().setFilterText(newText.toString());
         }
         return true;
     }

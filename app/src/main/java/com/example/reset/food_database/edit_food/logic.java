@@ -8,7 +8,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.reset.food_database.DatabaseHandler;
-import com.example.reset.food_database.list_food.list_food;
 import com.example.reset.food_database.objects.Food;
 import com.example.reset.food_database.objects.Unit;
 
@@ -60,7 +59,8 @@ public class logic {
         String foodText = gui.getFoodnameEditText().getText().toString();
         String kcalText = gui.getKcalEditText().getText().toString();
         String quantityText = gui.getQuantityEditText().getText().toString();
-        int unitText = unitList.get(gui.getUnitEditSpinner().getSelectedItemPosition()).getId();
+        String unitText = gui.getUnitEditSpinner().getSelectedItem().toString();
+
 
         if (foodText.isEmpty() || kcalText.isEmpty() || quantityText.isEmpty()) {
             Toast.makeText(activity, "Please fill in the whole formular!", Toast.LENGTH_SHORT).show();

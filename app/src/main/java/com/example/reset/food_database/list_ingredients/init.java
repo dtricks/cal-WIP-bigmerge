@@ -1,4 +1,4 @@
-package com.example.reset.food_database.list_recipes;
+package com.example.reset.food_database.list_ingredients;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -15,13 +15,13 @@ import com.example.reset.food_database.BaseActivity;
 
 public class init extends BaseActivity {
 
-    private com.example.reset.food_database.list_recipes.logic applicationLogic;
-    private com.example.reset.food_database.list_recipes.database data;
-    private com.example.reset.food_database.list_recipes.onClickListener eventListener;
-    private com.example.reset.food_database.list_recipes.gui gui;
+    private logic applicationLogic;
+    private database data;
+    private onClickListener eventListener;
+    private com.example.reset.food_database.list_ingredients.gui gui;
 
     private void initApplicationLogic(Activity activity) {
-        applicationLogic = new com.example.reset.food_database.list_recipes.logic(activity, data, gui);
+        applicationLogic = new logic(activity, data, gui);
     }
 
     private void initData(Bundle savedInstanceState) {

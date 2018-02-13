@@ -1,6 +1,6 @@
-/*
-package com.example.reset.food_database.list_food;
+package com.example.reset.food_database.recipe_addtolist;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,19 +12,18 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
-import android.app.AlertDialog;
-
 
 import com.example.reset.food_database.BaseActivity;
 import com.example.reset.food_database.DatabaseHandler;
 import com.example.reset.food_database.R;
 import com.example.reset.food_database.objects.Food;
-//import com.example.reset.food_database.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class list_food extends BaseActivity {
+//import com.example.reset.food_database.util;
+
+public class recipe_addtolist extends BaseActivity {
 
     Button addFood;
     ListView list;
@@ -32,16 +31,16 @@ public class list_food extends BaseActivity {
 
     List<Food> foodList = new ArrayList<Food>();
 
-    DatabaseHandler database= new DatabaseHandler(list_food.this);
+    DatabaseHandler database= new DatabaseHandler(recipe_addtolist.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_food);
 
-        addFood = (Button)findViewById(R.id.addfood);
+        addFood = (Button)findViewById(R.id.addingredient);
         list = (ListView)findViewById(R.id.foodlist);
-        searchBar = (SearchView)findViewById(R.id.foodfilter);
+        searchBar = (SearchView)findViewById(R.id.ingredientfilter);
 
         addFood .setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -59,7 +58,7 @@ public class list_food extends BaseActivity {
                 final int selectedItemId = (int) parent.getItemIdAtPosition(position);
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(list_food.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(recipe_addtolist.this);
                 builder.setTitle("Was möchten Sie mit tun?");
                 //builder.setIcon(R.drawable.icon);
 
@@ -177,4 +176,3 @@ public class list_food extends BaseActivity {
         list.setAdapter(adapter);
     }
 }
-*/
