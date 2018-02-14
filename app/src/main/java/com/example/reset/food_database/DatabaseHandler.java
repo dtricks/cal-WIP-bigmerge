@@ -35,6 +35,7 @@ import static android.content.ContentValues.TAG;
  * Created by Oliver Gras
  */
 
+//database for the whole project
 public class DatabaseHandler extends SQLiteOpenHelper{
 
 
@@ -164,6 +165,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+    //inserts a food to fooddatabasetable
     public void insertFood(String name, int kcal, double quantity, int unit) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -174,6 +176,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+     //inserts a food to fooddatabasetable
     public void insertFood(String name, int kcal, double quantity, String unit) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -183,7 +186,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
         db.execSQL(insertSQL);
     }
-
+     
+    //inserts a food to fooddatabasetable
     public void insertFood(String name, int kcal, double quantity, Unit unit) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -194,6 +198,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+    //inserts a recipe to recipedatabasetable
     public void insertRecipe(String name, int kcal) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -204,7 +209,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
-    //creates a new food entry
+    //inserts a food to the recipeingredientsdatabasetable
     public void insertRecipeingredient(int recipeId, String name, int kcal, double quantity, String unit, double portion) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -217,6 +222,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         Log.d("database", "kcal: "+ kcal);
     }
 
+    //inserts a diaryentry to diarydatabasetable
     public void insertDiaryEntry ( String foodName, int kcal, double portion, Unit unit, Date date, double quantity) {
         SQLiteDatabase db = this.getReadableDatabase();
         String insertSQL  = "INSERT INTO " + DIARYENTRY_NAME + " ("
@@ -347,6 +353,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         return diaryEntry;
     }
 
+    //getting the id of a diaryentry
     public DiaryEntry getDiaryEntry(int id) {
         List<DiaryEntry> diaryEntryList=getDiaryEntryList();
         DiaryEntry diaryEntry=new DiaryEntry();
@@ -358,6 +365,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         return diaryEntry;
     }
 
+    //getting the daily kcal goal
     public int getSettings() {
         int settingsMaxKcal;
         String selectQuery = "SELECT * FROM " + SETTINGS_NAME + " WHERE " + SETTINGS_ID + " = " + "'" + 1 + "'";
@@ -474,6 +482,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         return list;
     }
 
+    //list of diaryentries
     public List<DiaryEntry> getDiaryEntryList() {
         List<DiaryEntry> list = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + DIARYENTRY_NAME + " ORDER BY " + DIARYENTRY_COLUMN_FOOD + " ASC";
@@ -500,7 +509,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     }
 
-    // change to show inredients hier fehler beheben!
+    // list of recipeingredients
     public List<RecipeIngredient> getIngredientList(int recipeID) {
         List<RecipeIngredient> list = new ArrayList<RecipeIngredient>();
         String selectQuery = "SELECT * FROM " + RECIPEINGREDIENTS_NAME + " where " + RECIPEINGREDIENTS_RECIPEID +" = " + recipeID + " ORDER BY " + RECIPEINGREDIENTS_FOODNAME + " ASC";
@@ -583,6 +592,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         }
     }
 
+    //deletes a recipe from database
     public boolean deleteRecipe(int recipeID){
 
         try{
@@ -599,6 +609,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         }
     }
 
+    //deletes a diary entry
     public boolean deleteDiaryEntry(int diaryEntryId){
         try{
             String deleteQuery = "DELETE FROM " + DIARYENTRY_NAME + " WHERE " +
@@ -614,6 +625,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         }
     }
 
+    //delets a recipeingredient
     public boolean deleteIngredient(int recipeingredientID){
 
         try{
@@ -671,6 +683,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+    //updates a food in database
     public void updateFood (int Id, String name, int kcal, double quantity, Unit unit) {
         SQLiteDatabase db = this.getReadableDatabase();
         String insertSQL  = "UPDATE " + FOOD_NAME +  " SET " +  FOOD_COLUMN_NAME + " = '" + name + "', " + FOOD_COLUMN_KCAL + " = " + kcal + ", "
@@ -679,6 +692,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+    //updates a food in database
     public void updateFood (int Id, String name, int kcal, double quantity, int unit) {
         SQLiteDatabase db = this.getReadableDatabase();
         String insertSQL  = "UPDATE " + FOOD_NAME +  " SET " +  FOOD_COLUMN_NAME + " = '" + name + "', " + FOOD_COLUMN_KCAL + " = " + kcal + ", "
@@ -713,6 +727,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+    //updates a diary entry
     public void updateDiaryEntry (int diaryEntryId, String foodName, int kcal, double portion, Unit unit, Date date, double quantity) {
         SQLiteDatabase db = this.getReadableDatabase();
         String insertSQL  = "UPDATE " + DIARYENTRY_NAME + " SET "

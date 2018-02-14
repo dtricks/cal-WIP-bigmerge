@@ -61,7 +61,7 @@ public class logic {
         activity.startActivity(myIntent);
     }
 
-    //creates counter for Searchview to get the right id while using the filter function
+    //creates counter for Searchview to get the right id of the clicked food in list
     public void itemClicked(String selectedItem){
 
         int counter = 0;
@@ -80,7 +80,7 @@ public class logic {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("What would You like to do with your choosen food?");
 
-        //leads user to addtodiary
+        //leads user to addtodiary handoever the chosen foods id
         builder.setPositiveButton("Add to Diary",
                 new DialogInterface.OnClickListener()
                 {
@@ -132,7 +132,7 @@ public class logic {
                             Toast.makeText(activity, "Deleting was NOT successful!", Toast.LENGTH_SHORT).show();
                         }*/
 
-
+                        //delete confirmation
                         AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(activity);
                         deleteConfirm.setTitle("Delete Food?");
                         deleteConfirm.setMessage("Do you really want to delete this permanently?");

@@ -51,7 +51,7 @@ public class logic {
             db.getReadableDatabase();
             currentRecipe = db.getRecipe_new(intent.getIntExtra("handoverId", 0));
         }
-
+        
         fillList();
 
         gui.getFoodListRecipe().setTextFilterEnabled(true);
@@ -71,7 +71,7 @@ public class logic {
         }
 
         final int selectedItemId = counter;
-
+        //dialog window for adding a portionsize + saving a food to recipeingredients db
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
 
         final EditText edittext = new EditText(activity);
@@ -82,7 +82,7 @@ public class logic {
         alert.setMessage("Please choose your portion size!");
 
         alert.setView(edittext);
-
+        //adding a recipe ingredient
         alert.setPositiveButton("Add to Recipe",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         int oldKcal = 0;
@@ -112,7 +112,7 @@ public class logic {
                         }
                     }
                 });
-
+        //cancel the selction of the current food
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // cancel
