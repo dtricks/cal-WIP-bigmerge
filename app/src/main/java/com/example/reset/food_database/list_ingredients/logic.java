@@ -65,7 +65,6 @@ public class logic {
         Intent alertIntent = new Intent(activity, com.example.reset.food_database.foodlist_recipe.init.class);
         alertIntent.putExtra("handoverId", currentRecipe.getId());
         activity.startActivity(alertIntent);
-        //Intent myIntent = new Intent(activity, com.example.reset.food_database.recipe_addtolist.init.class);
        // activity.startActivity(myIntent);
     }
 

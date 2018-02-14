@@ -65,7 +65,7 @@ public class gui {
 
         add_recipe_button .setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent myIntent = new Intent(view.getContext(), com.example.reset.food_database.list_recipes.activity_list_recipes.class);
+                Intent myIntent = new Intent(view.getContext(), com.example.reset.food_database.list_recipes.init.class);
                 activity.startActivity(myIntent);
             }
         });
