@@ -53,9 +53,11 @@ public class logic {
     public void editUnitButtonClicked() {
 
         String currentUnit = gui.getUnitSpinner().getSelectedItem().toString();
+        //checking if unit to edit is a default value
         if(currentUnit.equals("g") ||currentUnit.equals("EL") ||currentUnit.equals("TL") || currentUnit.equals("Stueck") || currentUnit.equals("ml") || currentUnit.equals("Portion")) {
             Toast.makeText(activity, "Units g, EL, TL, Stueck, ml & Portion can not be edited!", Toast.LENGTH_SHORT).show();
         }
+        //handover allready written data from textfields while editing
         else {
             Intent intent = new Intent(activity, com.example.reset.food_database.edit_unit.init.class);
             intent.putExtra("name", gui.getFoodnameText().getText().toString());
@@ -68,7 +70,7 @@ public class logic {
     }
 
 
-        //starts add unit
+        //starts add unit handover allready written data from textfields
         public void addUnitButtonClicked() {
                 Intent intent = new Intent(activity, com.example.reset.food_database.add_unit.init.class);
                 intent.putExtra("name", gui.getFoodnameText().getText().toString());
@@ -82,7 +84,7 @@ public class logic {
     public void deleteUnitButtonClicked() {
 
 
-
+        //blocking the delete of the default values
         final String currentUnit = gui.getUnitSpinner().getSelectedItem().toString();
         if(currentUnit.equals("g") ||currentUnit.equals("EL") ||currentUnit.equals("TL") || currentUnit.equals("Stueck") || currentUnit.equals("ml") || currentUnit.equals("Portion")) {
             Toast.makeText(activity, "Units g, EL, TL, Stueck, ml & Portion can not be deleted!", Toast.LENGTH_SHORT).show();
@@ -91,6 +93,7 @@ public class logic {
             DatabaseHandler db = new DatabaseHandler(activity);
             if (db.deleteUnit(currentUnit) == true) {
 
+                //confirm deleting the unit
                 AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(activity);
                 deleteConfirm.setTitle("Delete Unit?");
                 deleteConfirm.setMessage("Do you really want to delete '" + currentUnit
