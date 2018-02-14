@@ -42,6 +42,7 @@ public class logic {
             Toast.makeText(activity, "Unit is already existing!", Toast.LENGTH_SHORT).show();
 
         }
+                //creating the unit + handover the textfields from add food
         else {
             db.insertUnit(db.getWritableDatabase(), indicatedUnit);
 

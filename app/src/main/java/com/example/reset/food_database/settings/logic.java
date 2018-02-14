@@ -23,7 +23,8 @@ public class logic {
         this.data = data;
         this.gui = gui;
         activity = act;
-
+        
+        //pulling the daily calories goal
         DatabaseHandler db = new DatabaseHandler(activity);
         db.getReadableDatabase();
         gui.getSettingsText().setText(String.valueOf(db.getSettings()));
