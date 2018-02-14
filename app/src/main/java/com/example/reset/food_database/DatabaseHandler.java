@@ -674,6 +674,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(updateSQL);
     }
 
+
     //updates a food object in database
     public void updateFood (int Id, String name, int kcal, double quantity, String unit) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -702,14 +703,64 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     //updates a portionsize in Recipe
-    public void updatePortionInRecipe (int Id, double quantity) {
+    public void updatePortionInRecipe (int ingredientId, double portion) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String insertSQL  = "UPDATE " + RECIPEINGREDIENTS_NAME +  " SET " +  RECIPEINGREDIENTS_PORTION + " = '" + quantity
-                + "' WHERE " + RECIPEINGREDIENTS_ID + " = " + Id;
+        int recipeID=0;
+        double oldPortion=0;
+        int oldKcal = 0;
+        double originalKcal = 0;
+        double newKcal = 0;
+
+        //get oldPortion
+        String selectQuery = "SELECT " + RECIPEINGREDIENTS_PORTION + " From " + RECIPEINGREDIENTS_NAME + " WHERE " + RECIPEINGREDIENTS_ID + " = " + ingredientId;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do{
+                oldPortion = cursor.getDouble(0);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        //get old Kcal
+        selectQuery = "SELECT " + RECIPEINGREDIENTS_KCAL + " From " + RECIPEINGREDIENTS_NAME + " WHERE " + RECIPEINGREDIENTS_ID + " = " + ingredientId;
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do{
+                oldKcal = cursor.getInt(0);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        //calculate original KCAL
+        originalKcal = oldKcal / oldPortion;
+        newKcal = originalKcal * portion;
+        newKcal = (int)newKcal;
+
+        //Update Portion of choosen ingredient
+        String insertSQL  = "UPDATE " + RECIPEINGREDIENTS_NAME +  " SET " +  RECIPEINGREDIENTS_PORTION + " = '" + portion
+                + "' WHERE " + RECIPEINGREDIENTS_ID + " = " + ingredientId;
         db.execSQL(insertSQL);
+
+        //Update Kcal of choosen ingredient
+        insertSQL  = "UPDATE " + RECIPEINGREDIENTS_NAME +  " SET " +  RECIPEINGREDIENTS_KCAL + " = '" + newKcal
+                + "' WHERE " + RECIPEINGREDIENTS_ID + " = " + ingredientId;
+        db.execSQL(insertSQL);
+
+        //get Recipe ID
+        selectQuery = "SELECT " + RECIPEINGREDIENTS_RECIPEID + " From " + RECIPEINGREDIENTS_NAME + " WHERE " + RECIPEINGREDIENTS_ID + " = " + ingredientId;
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do{
+                recipeID = cursor.getInt(0);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        //Calculate new Kcal for Recipe
         DatabaseHandler db2 = this;
-        //db2.calculateRecipeKcal();
+        db2.calculateRecipeKcal(recipeID);
     }
+
 
     //updates the settingsentry in database
     public void updateSettings (int maxkcal) {
@@ -740,6 +791,24 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 +" WHERE "+ DIARYENTRY_ID + "="  +Integer.toString(diaryEntryId);
         db.execSQL(insertSQL);
     }
+
+    //getRecipeID from new Recipe
+    public int getIdfromNew () {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int recipeID = 0;
+
+        //get newRecipeId
+        String selectQuery = "SELECT " + RECIPE_ID + " From " + RECIPE_NAME + " WHERE " + RECIPE_COLUMN_KCAL + " = " + -1;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                recipeID = cursor.getInt(0);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return recipeID;
+    }
+
 }
 
 
