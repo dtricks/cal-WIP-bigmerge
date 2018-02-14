@@ -91,6 +91,8 @@ public class logic {
 
                         Intent alertIntent = new Intent(activity, com.example.reset.food_database.addtodiary.init.class);
                         alertIntent.putExtra("handoverId", foodList.get(selectedItemId).getId());
+                        alertIntent.putExtra("isFood", true);
+                        alertIntent.putExtra("isRecipe", false);
                         activity.startActivity(alertIntent);
 
                         //for testing purposes TODO remove
@@ -117,22 +119,46 @@ public class logic {
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        int foodID = foodList.get(selectedItemId).getId();
+                        final int foodID = foodList.get(selectedItemId).getId();
 
 
                         DatabaseHandler db = new DatabaseHandler(activity);
 
-                        if(db.deleteFood(foodID)){
+                        /*if(db.deleteFood(foodID)){
                             Toast.makeText(activity, foodList.get(selectedItemId).getName() + " has been successfully deleted!", Toast.LENGTH_SHORT).show();
                             fillList();
                         }
                         else{
                             Toast.makeText(activity, "Deleting was NOT successful!", Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
+
+
+                        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(activity);
+                        deleteConfirm.setTitle("Delete Food?");
+                        deleteConfirm.setMessage("Do you really want to delete this permanently?");
+
+                        deleteConfirm.setPositiveButton("Yes",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        DatabaseHandler db = new DatabaseHandler(activity);
+
+                                        if(db.deleteFood(foodID)){
+                                            Toast.makeText(activity, foodList.get(selectedItemId).getName() + " has been successfully deleted!", Toast.LENGTH_SHORT).show();
+                                            fillList();
+                                        }
+                                        else{
+                                            Toast.makeText(activity, "Deleting was NOT successful!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                        deleteConfirm.setNegativeButton("No", null) // Do nothing on no
+                                .show();
 
                     }
                 });
-        builder.create().show();final int foodID = foodList.get(selectedItemId).getId();
+        builder.create().show();
+        /*final int foodID = foodList.get(selectedItemId).getId();
 
         AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(activity);
         deleteConfirm.setTitle("Delete Food?");
@@ -155,7 +181,7 @@ public class logic {
                 });
         deleteConfirm.setNegativeButton("No", null) // Do nothing on no
                 .show();
-
+*/
 
     }
 

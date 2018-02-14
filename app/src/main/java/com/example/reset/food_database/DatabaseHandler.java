@@ -169,7 +169,27 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
         String insertSQL = "INSERT INTO " + FOOD_NAME + " (" + FOOD_COLUMN_NAME
                 + ", " + FOOD_COLUMN_KCAL + ", " + FOOD_COLUMN_QUANTITY + ", " + FOOD_COLUMN_UNIT + ") " +
-                "VALUES ('" + name + "', " + kcal + ", " + quantity + ", '" + unit + "')";
+                "VALUES ('" + name + "', " + kcal + ", " + quantity + ", '" + getUnit_new(unit).getId() + "')";
+
+        db.execSQL(insertSQL);
+    }
+
+    public void insertFood(String name, int kcal, double quantity, String unit) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String insertSQL = "INSERT INTO " + FOOD_NAME + " (" + FOOD_COLUMN_NAME
+                + ", " + FOOD_COLUMN_KCAL + ", " + FOOD_COLUMN_QUANTITY + ", " + FOOD_COLUMN_UNIT + ") " +
+                "VALUES ('" + name + "', " + kcal + ", " + quantity + ", '" + getUnitbyName(unit).getId() + "')";
+
+        db.execSQL(insertSQL);
+    }
+
+    public void insertFood(String name, int kcal, double quantity, Unit unit) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String insertSQL = "INSERT INTO " + FOOD_NAME + " (" + FOOD_COLUMN_NAME
+                + ", " + FOOD_COLUMN_KCAL + ", " + FOOD_COLUMN_QUANTITY + ", " + FOOD_COLUMN_UNIT + ") " +
+                "VALUES ('" + name + "', " + kcal + ", " + quantity + ", '" + unit.getId() + "')";
 
         db.execSQL(insertSQL);
     }
@@ -263,6 +283,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 food.setName(cursor.getString(1));
                 food.setKcal(cursor.getInt(2));
                 food.setQuantity(cursor.getDouble(3));
+                int debug_int=cursor.getInt(4);
                 food.setUnit(getUnit_new(cursor.getInt(4)));
                 //list.add(cursor.getString(3) + " " + cursor.getString(4) + " " + cursor.getString(1) + " (" + cursor.getString(2) + " kcal)");
             }while(cursor.moveToNext());
@@ -646,6 +667,14 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         String insertSQL  = "UPDATE " + FOOD_NAME +  " SET " +  FOOD_COLUMN_NAME + " = '" + name + "', " + FOOD_COLUMN_KCAL + " = " + kcal + ", "
                 + FOOD_COLUMN_QUANTITY + " = " + quantity + ", "  + FOOD_COLUMN_UNIT + " = '" + unit
+                + "' WHERE " + FOOD_ID + "=" + Id;
+        db.execSQL(insertSQL);
+    }
+
+    public void updateFood (int Id, String name, int kcal, double quantity, Unit unit) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String insertSQL  = "UPDATE " + FOOD_NAME +  " SET " +  FOOD_COLUMN_NAME + " = '" + name + "', " + FOOD_COLUMN_KCAL + " = " + kcal + ", "
+                + FOOD_COLUMN_QUANTITY + " = " + quantity + ", "  + FOOD_COLUMN_UNIT + " = '" + unit.getId()
                 + "' WHERE " + FOOD_ID + "=" + Id;
         db.execSQL(insertSQL);
     }

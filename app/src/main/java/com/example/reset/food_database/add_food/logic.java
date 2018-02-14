@@ -122,8 +122,8 @@ public class logic {
                 }
                 else {
                     DatabaseHandler db = new DatabaseHandler(activity);
-
-                    db.insertFood(foodText, Integer.parseInt(kcalText), Double.parseDouble(quantityText), unitText);
+                    Unit unit = db.getUnitbyName(unitText);
+                    db.insertFood(foodText, Integer.parseInt(kcalText), Double.parseDouble(quantityText), unit);
 
                     Toast.makeText(activity, foodText + " has been added!", Toast.LENGTH_SHORT).show();
                     Intent myIntent = new Intent(activity, com.example.reset.food_database.list_food.init.class);

@@ -66,8 +66,8 @@ public class logic {
             Toast.makeText(activity, "Please fill in the whole formular!", Toast.LENGTH_SHORT).show();
         } else {
             DatabaseHandler db = new DatabaseHandler(activity);
-
-            db.updateFood(currentFood.getId(),foodText, Integer.parseInt(kcalText), Double.parseDouble(quantityText), unitText);
+            Unit unit=db.getUnitbyName(unitText);
+            db.updateFood(currentFood.getId(),foodText, Integer.parseInt(kcalText), Double.parseDouble(quantityText), unit.getId());
 
             Toast.makeText(activity, foodText + " has been edited!", Toast.LENGTH_SHORT).show();
             Intent myIntent = new Intent(activity, com.example.reset.food_database.list_food.init.class);

@@ -14,32 +14,20 @@
         <activity android:name=".add_unit.init" />
         <activity android:name=".edit_unit.init" />
         <activity android:name=".edit_food.init" />
-<<<<<<< HEAD
         <activity android:name=".list_recipes.init" />
         <activity android:name=".list_ingredients.init" />
         <activity android:name=".recipe_addtolist.init" />
         <activity android:name=".foodlist_recipe.init" />
         <activity android:name=".settings.init" />
-        <activity android:name=".diary.activity_diary">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-=======
-        <activity android:name=".list_recipes.activity_list_recipes" />
-        <activity android:name=".foodlist_recipe.init" />
-        <activity android:name=".addtodiary.init" />
-        <activity android:name=".settings.init" />
         <activity android:name=".statistics.init" />
         <activity android:name=".edit_diaryEntry.init" />
+        <activity android:name=".addtodiary.init" />
         <activity android:name=".diary.init">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
->>>>>>> origin/master
         </activity>
 
     </application>
