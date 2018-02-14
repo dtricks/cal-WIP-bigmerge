@@ -17,8 +17,6 @@ import com.example.reset.food_database.objects.Recipes;
 
 import android.app.AlertDialog;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +49,7 @@ public class logic {
             db.getReadableDatabase();
             currentRecipe = db.getRecipe_new(intent.getIntExtra("handoverId", 0));
         }
-        
+
         fillList();
 
         gui.getFoodListRecipe().setTextFilterEnabled(true);
@@ -71,7 +69,7 @@ public class logic {
         }
 
         final int selectedItemId = counter;
-        //dialog window for adding a portionsize + saving a food to recipeingredients db
+
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
 
         final EditText edittext = new EditText(activity);
@@ -82,42 +80,42 @@ public class logic {
         alert.setMessage("Please choose your portion size!");
 
         alert.setView(edittext);
-        //adding a recipe ingredient
+
         alert.setPositiveButton("Add to Recipe",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        int oldKcal = 0;
-                        String textString = edittext.getText().toString();
-                        if (textString.isEmpty() || Double.parseDouble(textString) == 0){
-                            Toast.makeText(activity, "Please fill in your portionsize!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            RecipeIngredient rec = new RecipeIngredient();
-                            rec.setFoodname(foodList.get(selectedItemId).getName());
-                            rec.setKcal(foodList.get(selectedItemId).getKcal());
-                            rec.setQuantity(foodList.get(selectedItemId).getQuantity());
-                            rec.setUnit(foodList.get(selectedItemId).getUnit().getName());
-                            rec.setPortion(Double.parseDouble(edittext.getText().toString()));
-                            rec.setRecipeId(currentRecipe.getId());
+            public void onClick(DialogInterface dialog, int id) {
+                int oldKcal = 0;
+                String textString = edittext.getText().toString();
+                if (textString.isEmpty() || Double.parseDouble(textString) == 0){
+                    Toast.makeText(activity, "Please fill in your portionsize!", Toast.LENGTH_SHORT).show();
+                } else {
+                    RecipeIngredient rec = new RecipeIngredient();
+                    rec.setFoodname(foodList.get(selectedItemId).getName());
+                    rec.setKcal(foodList.get(selectedItemId).getKcal());
+                    rec.setQuantity(foodList.get(selectedItemId).getQuantity());
+                    rec.setUnit(foodList.get(selectedItemId).getUnit().getName());
+                    rec.setPortion(Double.parseDouble(edittext.getText().toString()));
+                    rec.setRecipeId(currentRecipe.getId());
 
-                            int foodID = foodList.get(selectedItemId).getId();
-                            Food food = foodList.get(selectedItemId);
-                            oldKcal = currentRecipe.getKcal();
-                            DatabaseHandler db = new DatabaseHandler(activity);
+                    int foodID = foodList.get(selectedItemId).getId();
+                    Food food = foodList.get(selectedItemId);
+                    oldKcal = currentRecipe.getKcal();
+                    DatabaseHandler db = new DatabaseHandler(activity);
 
-                            db.insertRecipeingredient(rec.getRecipeId(),rec.getFoodname(),rec.getKcal(),rec.getQuantity(),rec.getUnit(),rec.getPortion());
-                            //db.setKcalForIngredient(rec.getId(),rec.getKcal());
-                            db.calculateRecipeKcal(currentRecipe.getId());
+                    db.insertRecipeingredient(rec.getRecipeId(),rec.getFoodname(),rec.getKcal(),rec.getQuantity(),rec.getUnit(),rec.getPortion());
+                    //db.setKcalForIngredient(rec.getId(),rec.getKcal());
+                    db.calculateRecipeKcal(currentRecipe.getId());
 
-                           Toast.makeText(activity, rec.toString(), Toast.LENGTH_LONG).show();
-                            // Toast.makeText(activity, recipeIng.toString(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-        //cancel the selction of the current food
+                    Toast.makeText(activity, rec.toString(), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(activity, recipeIng.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // cancel
-        }
-                });
+            }
+        });
 
         alert.show();
     }
@@ -152,3 +150,5 @@ public class logic {
         gui.getFoodListRecipe().setAdapter(adapter);
     }
 }
+
+
