@@ -3,7 +3,7 @@ package com.example.reset.food_database.foodlist_recipe;
 import android.os.Bundle;
 
 /**
- * Created by Oliver Gras
+ * Created by Matthias Dellert
  */
 
 public class database {

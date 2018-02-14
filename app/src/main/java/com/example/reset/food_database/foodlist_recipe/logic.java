@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Oliver Gras
+ * Created by Matthias Dellert
  */
 
 //logic for adding foods from the list of foods to a recipe

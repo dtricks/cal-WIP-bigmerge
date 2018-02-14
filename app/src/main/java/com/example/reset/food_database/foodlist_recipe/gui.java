@@ -7,7 +7,7 @@ import android.widget.SearchView;
 import com.example.reset.food_database.R;
 
 /**
- * Created by Oliver Gras
+ * Created by Matthias Dellert
  */
 
 public class gui {
