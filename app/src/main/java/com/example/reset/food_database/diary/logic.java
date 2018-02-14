@@ -118,8 +118,12 @@ public class logic {
             String kcal = Integer.toString(object.getKcal());
             SimpleDateFormat simpleDateFormat= new SimpleDateFormat("dd.MM.yyyy");
             String date = simpleDateFormat.format(object.getDate());
-            diaryEntryAdapter.add(Double.toString(portion)+" Portion(en) "+quantityBearbeitet + " " + unitName + " " + foodName + " (" + kcal + " kcal)" + "\n" + date);
-
+            if (object.getUnit().getName()==null && quantity==0.0){
+                diaryEntryAdapter.add(Double.toString(portion)+" Portion(en) "  + foodName + " (" + kcal + " kcal)" + "\n" + date+ "        [Rezept]");
+            }
+            else {
+                diaryEntryAdapter.add(Double.toString(portion) + " Portion(en) " + quantityBearbeitet + " " + unitName + " " + foodName + " (" + kcal + " kcal)" + "\n" + date+ "        [Lebensmittel]");
+            }
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, diaryEntryAdapter);

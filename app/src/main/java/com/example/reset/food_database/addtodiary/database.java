@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 public class database {
@@ -38,5 +38,8 @@ public class database {
         db.insertDiaryEntry( foodName,  kcal,  portion,  unit,  date, quantity);
     }
 
-
+    public void insertDiaryEntry(String foodName, int kcal, double portion, Date date){
+        DatabaseHandler db = new DatabaseHandler(activity);
+        db.insertDiaryEntry( foodName,  kcal,  portion, date);
+    }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 
 
 /**
- * Created by Oliver Gras
+ * Created by Matthias Dellert
  */
 
 //logic for the list of recipes
@@ -34,17 +34,22 @@ public class logic {
 
     }
 
-    //leads user to add_Recipe
+    //leads user to ingredientlist
     public void createRecipeButtonClicked(){
         String recipeName = gui.getRecipename().getText().toString();
-        int kcal = 0;
+        int kcal = -1;
+        int recipeID = 0;
 
         DatabaseHandler db = new DatabaseHandler(activity);
 
-        db.insertRecipe(recipeName, kcal ); //Integer.parseInt("3") );
+        //new recipe is created
+        db.insertRecipe(recipeName, kcal );
+        recipeID = db.getIdfromNew();
 
-        Intent myIntent = new Intent(activity, com.example.reset.food_database.list_recipes.init.class);
-        activity.startActivity(myIntent);
+        Intent alertIntent = new Intent(activity, com.example.reset.food_database.list_ingredients.init.class);
+        alertIntent.putExtra("handoverId", recipeID);
+        activity.startActivity(alertIntent);
+
     }
 
 

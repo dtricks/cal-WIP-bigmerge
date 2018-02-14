@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 
 /**
- * Created by Oliver Gras
+ * Created by Matthias Dellert
  */
 
 //manages searchview, listview & clicklisteners for this activity

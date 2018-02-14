@@ -25,7 +25,7 @@ import java.util.List;
 
 
 /**
- * Created by Oliver Gras
+ * Created by Matthias Dellert
  */
 
 //logic for the list of recipes
@@ -52,6 +52,7 @@ public class logic {
             currentRecipe = db.getRecipe_new(intent.getIntExtra("handoverId", 0));
         }
 
+        //sets header with RecipeName
         gui.setRecipeNameText("Ingredients of: " + currentRecipe.getName());
 
         fillList();
@@ -65,7 +66,8 @@ public class logic {
         Intent alertIntent = new Intent(activity, com.example.reset.food_database.foodlist_recipe.init.class);
         alertIntent.putExtra("handoverId", currentRecipe.getId());
         activity.startActivity(alertIntent);
-       // activity.startActivity(myIntent);
+        //Intent myIntent = new Intent(activity, com.example.reset.food_database.recipe_addtolist.init.class);
+        // activity.startActivity(myIntent);
     }
 
     //creates counter for Searchview to get the right id while using the filter function
@@ -108,11 +110,7 @@ public class logic {
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                       // Intent alertIntent = new Intent(activity, com.example.reset.food_database.edit_food.init.class);
-                        //alertIntent.putExtra("handoverId", ingredientList.get(selectedItemId).getId());
-                       // activity.startActivity(alertIntent);
-                        //DatabaseHandler db = new DatabaseHandler(activity);
-                       // db.CalculateKcal(currentRecipe.getId());
+
                     }
                 });
 
@@ -129,6 +127,8 @@ public class logic {
 
                         if(db.deleteIngredient(recipeingredientID)){
                             Toast.makeText(activity, ingredientList.get(selectedItemId).getFoodname() + " has been successfully deleted!", Toast.LENGTH_SHORT).show();
+                            //calculate updated Kcal
+                            db.calculateRecipeKcal(currentRecipe.getId());
                             fillList();
                         }
                         else{
@@ -149,6 +149,7 @@ public class logic {
 
     }
 
+    //updates the Portion size of an ingredient
     private void updatePortion(final int ingredientid){
 
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
@@ -195,15 +196,16 @@ public class logic {
         List<String> foodAdapter = new ArrayList<String>();
 
         for (RecipeIngredient object: ingredientList) {
-            double quantity = object.getKcal();
+            int quantity = (int)object.getQuantity();
             //String quantityBearbeitet =  String.format(((quantity % 1.0D) == 0.0D) ? "%.0f" : "%.1f", quantity);
             String unitName = object.getUnit();
+            double portion = object.getPortion();
             String recipeName = object.getFoodname();
             String kcal = Integer.toString(object.getKcal());
             int kcaltmp = object.getKcal();
 
-           foodAdapter.add(recipeName + " (" + kcaltmp + " kcal)");
-            stringList.add(recipeName +  " (" + kcaltmp + " kcal)");
+            foodAdapter.add(portion +" Portion(en) " +quantity + unitName+ " " + recipeName + " (" + kcaltmp + " kcal) (" + portion*quantity + unitName+")");
+            stringList.add(portion +" Portion(en) " +quantity + unitName+ " " + recipeName + " (" + kcaltmp + " kcal) (" + portion*quantity + unitName+")");
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, foodAdapter);

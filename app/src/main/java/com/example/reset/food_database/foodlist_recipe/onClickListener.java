@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.support.v7.widget.SearchView;
 
 /**
- * Created by Oliver Gras
+ * Created by Matthias Dellert
  */
 
 //manages searchview and listview for this activity

@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 //manages the clicklisteners for this activity

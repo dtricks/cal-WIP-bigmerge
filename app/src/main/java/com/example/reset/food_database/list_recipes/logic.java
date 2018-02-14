@@ -19,7 +19,7 @@ import java.util.List;
 
 
 /**
- * Created by Oliver Gras
+ * Created by Matthias Dellert
  */
 
 //logic for the list of recipes
@@ -37,6 +37,8 @@ public class logic {
         this.gui = gui;
         activity = act;
 
+        //deletes all Recipes with no Ingredients
+        clearEmptyRecipes();
 
         fillList();
 
@@ -65,9 +67,9 @@ public class logic {
 
         final int selectedItemId = counter;
 
-        //opens Dialog with the 3 choices edit food, delete food, add food to diary
+        //opens Dialog with the 3 choices edit recipe, delete recipe, add recipe to diary
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("What would You like to do with your choosen food?");
+        builder.setTitle("What would You like to do with your choosen Recipe?");
 
         //leads user to addtodiary
         builder.setPositiveButton("Add to Diary",
@@ -75,15 +77,14 @@ public class logic {
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-
                         int recipeID = recipesList.get(selectedItemId).getId();
 
                         Recipes recipes = recipesList.get(selectedItemId);
 
                         Intent alertIntent = new Intent(activity, com.example.reset.food_database.addtodiary.init.class);
                         alertIntent.putExtra("handoverId", recipesList.get(selectedItemId).getId());
-                        alertIntent.putExtra("isRecipe", true);
                         alertIntent.putExtra("isFood", false);
+                        alertIntent.putExtra("isRecipe", true);
                         activity.startActivity(alertIntent);
 
                         Toast.makeText(activity, recipes.toString(), Toast.LENGTH_LONG).show();
@@ -138,7 +139,7 @@ public class logic {
 
     }
 
-    //filling the list with foods from database
+    //filling the list with recipes from database
     private void fillList() {
 
         DatabaseHandler db = new DatabaseHandler(activity);
@@ -148,16 +149,31 @@ public class logic {
         for (Recipes object: recipesList) {
             double quantity = object.getKcal();
             String quantityBearbeitet =  String.format(((quantity % 1.0D) == 0.0D) ? "%.0f" : "%.1f", quantity);
-          // String unitName = object.getUnit().getName();
             String recipeName = object.getName();
             String kcal = Integer.toString(object.getKcal());
-           foodAdapter.add(recipeName + " (" + kcal + " kcal)");
+            foodAdapter.add(recipeName + " (" + kcal + " kcal)");
             stringList.add(recipeName +  " (" + kcal + " kcal)");
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, foodAdapter);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
         gui.getRecipeList().setAdapter(adapter);
+    }
+
+    //deletes recipes with kcal <= 0 (no ingredients)
+    public void clearEmptyRecipes(){
+        DatabaseHandler db = new DatabaseHandler(activity);
+        recipesList = db.getRecipeList();
+
+        for (Recipes object: recipesList) {
+            int kcal = object.getKcal();
+            int recipeID = object.getId();
+            if (kcal <= 0){
+                db.deleteRecipe(recipeID);
+            }
+        }
+
+
     }
 
 

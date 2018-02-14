@@ -7,7 +7,7 @@ import com.example.reset.food_database.BaseActivity;
 
 //manages the classes within the package
 /**
- * Created by Oliver Gras
+ * Created by Matthias Dellert
  */
 
 public class init extends BaseActivity {

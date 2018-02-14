@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 //manages the classes within the package

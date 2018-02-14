@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 public class gui {
