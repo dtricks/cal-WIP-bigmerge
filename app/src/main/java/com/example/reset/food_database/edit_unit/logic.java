@@ -24,7 +24,7 @@ public class logic {
         this.gui = gui;
         activity = act;
 
-        //getting the Id of the food chosen in list_food
+        //getting the Id of the unit chosen in add food
         Intent intent = activity.getIntent();
         if (intent != null) {
             DatabaseHandler db = new DatabaseHandler(activity);
