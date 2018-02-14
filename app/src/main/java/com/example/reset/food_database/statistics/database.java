@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 
 /*
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 

@@ -9,7 +9,7 @@ import com.example.reset.food_database.BaseActivity;
 
 
 /**
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 //manages the classes within the package

@@ -9,7 +9,7 @@ import com.example.reset.food_database.R;
 
 
 /*
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 

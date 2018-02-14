@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 /**
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 //manages the clicklisteners for this activity

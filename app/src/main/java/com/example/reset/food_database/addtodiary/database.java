@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 public class database {

@@ -14,7 +14,7 @@ import java.util.List;
 
 
 /*
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 //logic for setting the daily kalories goal

@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by Denis Kerner
+ * Created by Richard Sengfelder
  */
 
 
