@@ -242,6 +242,21 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(insertSQL);
     }
 
+    public void insertDiaryEntry ( String foodName, int kcal, double portion, Date date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String insertSQL  = "INSERT INTO " + DIARYENTRY_NAME + " ("
+                + DIARYENTRY_COLUMN_FOOD + ", "
+                + DIARYENTRY_COLUMN_KCAL + ", "
+                + DIARYENTRY_COLUMN_PORTION + ", "
+                + DIARYENTRY_COLUMN_DATE  + ") "
+                +"VALUES ('"
+                + foodName + "', '"
+                + Integer.toString(kcal) + "', '"
+                + Double.toString(portion) + "', '"
+                + date.toString() +  "') ";
+        db.execSQL(insertSQL);
+    }
+
     //returns a Unit names as a list of Strings
     public List<String> getUnits() {
         List<String> list = new ArrayList<String>();
@@ -788,6 +803,18 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 + DIARYENTRY_COLUMN_DATE + " = " + "'" +date.toString()+"'" +", "//TODO add locale so that date formatting doesnt change
                 + DIARYENTRY_COLUMN_UNIT + " = " + "'" +unit.getName()+"'" +", "
                 + DIARYENTRY_COLUMN_QUANTITY + " = " + "'" +Double.toString(quantity)+"'" +""
+                +" WHERE "+ DIARYENTRY_ID + "="  +Integer.toString(diaryEntryId);
+        db.execSQL(insertSQL);
+    }
+
+    //updates a diary entry
+    public void updateDiaryEntry (int diaryEntryId, String foodName, int kcal, double portion, Date date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String insertSQL  = "UPDATE " + DIARYENTRY_NAME + " SET "
+                + DIARYENTRY_COLUMN_FOOD + " = " + "'" +foodName +"'" +", "
+                + DIARYENTRY_COLUMN_KCAL + " = " + "'" +Integer.toString(kcal) +"'" +", "
+                + DIARYENTRY_COLUMN_PORTION + " = " + "'" +Double.toString(portion) +"'" +", "
+                + DIARYENTRY_COLUMN_DATE + " = " + "'" +date.toString()+"'" +""//TODO add locale so that date formatting doesnt change
                 +" WHERE "+ DIARYENTRY_ID + "="  +Integer.toString(diaryEntryId);
         db.execSQL(insertSQL);
     }

@@ -67,25 +67,30 @@ public class logic {
 
         }
         else {
-
-            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy"); //TODO help for below -- Date format
+            Intent intent = activity.getIntent();
+            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
             Date date = new Date();
 
             try{
                 date=dateFormat.parse(gui.getDate_textfield().getText().toString());
             }catch (Exception e){Toast.makeText(activity, e.getMessage(), Toast.LENGTH_LONG);}
-
-
-
-            data.insertDiaryEntry(
-            gui.getName_content_textview().getText().toString(),
-            Integer.parseInt(gui.getKcal_content_textview().getText().toString()),
-            givenPortion,
-            new Unit(gui.getUnit_content_textview().getText().toString()),
-            date, Double.parseDouble(gui.getQuantity_content_textview().getText().toString())); //TODO Date format
-
+            if (intent.getBooleanExtra("isRecipe", false)){
+                data.insertDiaryEntry(
+                        gui.getName_content_textview().getText().toString(),
+                        Integer.parseInt(gui.getKcal_content_textview().getText().toString()),
+                        givenPortion,
+                        date);
+            }
+            else {
+                data.insertDiaryEntry(
+                        gui.getName_content_textview().getText().toString(),
+                        Integer.parseInt(gui.getKcal_content_textview().getText().toString()),
+                        givenPortion,
+                        new Unit(gui.getUnit_content_textview().getText().toString()),
+                        date, Double.parseDouble(gui.getQuantity_content_textview().getText().toString()));
+            }
             Toast.makeText(activity, "Diary Entry for " + gui.getName_content_textview().getText().toString() + " has been added!", Toast.LENGTH_SHORT).show();
-            Intent intent = activity.getIntent();
+
             Intent myIntent = new Intent(activity, com.example.reset.food_database.diary.init.class);
             /*if (intent != null) {
                 myIntent.putExtra("name", intent.getStringExtra("name"));

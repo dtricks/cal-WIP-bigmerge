@@ -38,5 +38,8 @@ public class database {
         db.insertDiaryEntry( foodName,  kcal,  portion,  unit,  date, quantity);
     }
 
-
+    public void insertDiaryEntry(String foodName, int kcal, double portion, Date date){
+        DatabaseHandler db = new DatabaseHandler(activity);
+        db.insertDiaryEntry( foodName,  kcal,  portion, date);
+    }
 }

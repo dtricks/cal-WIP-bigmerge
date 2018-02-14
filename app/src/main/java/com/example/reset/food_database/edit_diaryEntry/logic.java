@@ -47,15 +47,29 @@ public class logic {
             currentDiaryEntry = db.getDiaryEntry(intent.getIntExtra("handoverId", 0));
         }
 
+        if (currentDiaryEntry.getUnit().getName()==null && currentDiaryEntry.getQuantity()==0.0){ //if its a recipe
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy"); // TODO DatePicker
+            gui.getDate_textfield().setText(dateFormat.format(currentDiaryEntry.getDate()));
+            Log.d("editDiaryEntry: ", ""+currentDiaryEntry.getKcal());
+            gui.getKcal_content_textview().setText(""+currentDiaryEntry.getKcal());
+            gui.getName_content_textview().setText(currentDiaryEntry.getFoodname());
+            gui.getPortion_textfield().setText(Double.toString(currentDiaryEntry.getPortion()));
+            gui.getUnit_content_textview().setText("");
+            gui.getQuantity_content_textview().setText("");
+            gui.getQuantity_textview().setText("");
+        }
+        else {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy"); // TODO DatePicker
+            gui.getDate_textfield().setText(dateFormat.format(currentDiaryEntry.getDate()));
+            Log.d("editDiaryEntry: ", ""+currentDiaryEntry.getKcal());
+            gui.getKcal_content_textview().setText(""+currentDiaryEntry.getKcal());
+            gui.getName_content_textview().setText(currentDiaryEntry.getFoodname());
+            gui.getPortion_textfield().setText(Double.toString(currentDiaryEntry.getPortion()));
+            gui.getQuantity_content_textview().setText(Double.toString(currentDiaryEntry.getQuantity()));
+            gui.getUnit_content_textview().setText(currentDiaryEntry.getUnit().getName());
+        }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy"); // TODO DatePicker
-        gui.getDate_textfield().setText(dateFormat.format(currentDiaryEntry.getDate()));
-        Log.d("editDiaryEntry: ", ""+currentDiaryEntry.getKcal());
-        gui.getKcal_content_textview().setText(""+currentDiaryEntry.getKcal());
-        gui.getName_content_textview().setText(currentDiaryEntry.getFoodname());
-        gui.getPortion_textfield().setText(Double.toString(currentDiaryEntry.getPortion()));
-        gui.getQuantity_content_textview().setText(Double.toString(currentDiaryEntry.getQuantity()));
-        gui.getUnit_content_textview().setText(currentDiaryEntry.getUnit().getName());
+
     }
 
     //updates the diaryEntry
@@ -73,14 +87,26 @@ public class logic {
                 e.printStackTrace();
             }
             Log.d("editDiaryEntry:", ""+date.toString());
-            db.updateDiaryEntry(currentDiaryEntry.getId(),
-                    currentDiaryEntry.getFoodname(),
-                    currentDiaryEntry.getKcal(),
-                    Double.parseDouble(gui.getPortion_textfield().getText().toString()),
-                    currentDiaryEntry.getUnit(),
-                    date,
-                    currentDiaryEntry.getQuantity() //TODO update database handler
-            );
+
+            if (currentDiaryEntry.getUnit().getName()==null && currentDiaryEntry.getQuantity()==0.0) { //if its a recipe
+                db.updateDiaryEntry(currentDiaryEntry.getId(),
+                        currentDiaryEntry.getFoodname(),
+                        currentDiaryEntry.getKcal(),
+                        Double.parseDouble(gui.getPortion_textfield().getText().toString()),
+                        date
+                );
+            }
+            else{
+                db.updateDiaryEntry(currentDiaryEntry.getId(),
+                        currentDiaryEntry.getFoodname(),
+                        currentDiaryEntry.getKcal(),
+                        Double.parseDouble(gui.getPortion_textfield().getText().toString()),
+                        currentDiaryEntry.getUnit(),
+                        date,
+                        currentDiaryEntry.getQuantity()
+                );
+            }
+
 
             Toast.makeText(activity, currentDiaryEntry.getFoodname() + " has been edited!", Toast.LENGTH_SHORT).show();
             Intent myIntent = new Intent(activity, com.example.reset.food_database.diary.init.class);

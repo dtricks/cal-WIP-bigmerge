@@ -77,10 +77,15 @@ public class logic {
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
-
                         int recipeID = recipesList.get(selectedItemId).getId();
 
                         Recipes recipes = recipesList.get(selectedItemId);
+
+                        Intent alertIntent = new Intent(activity, com.example.reset.food_database.addtodiary.init.class);
+                        alertIntent.putExtra("handoverId", recipesList.get(selectedItemId).getId());
+                        alertIntent.putExtra("isFood", false);
+                        alertIntent.putExtra("isRecipe", true);
+                        activity.startActivity(alertIntent);
 
                         Toast.makeText(activity, recipes.toString(), Toast.LENGTH_LONG).show();
 
