@@ -48,6 +48,7 @@ public class logic {
             Toast.makeText(activity, "Unit " + indicatedUnit + " has been added!", Toast.LENGTH_SHORT).show();
             Intent intent = activity.getIntent();
             Intent myIntent = new Intent(activity, com.example.reset.food_database.add_food.init.class);
+                //handover allready written data from textfields back to add food & handover the new unit to set the unitspinner 
             if (intent != null) {
                 myIntent.putExtra("name", intent.getStringExtra("name"));
                 myIntent.putExtra("quantity", intent.getStringExtra("quantity"));
