@@ -164,7 +164,7 @@ public class recipe_addtolist extends BaseActivity {
         for (Food object: foodList) {
             double quantity = object.getQuantity();
             String quantityBearbeitet =  String.format(((quantity % 1.0D) == 0.0D) ? "%.0f" : "%.1f", quantity);
-            String unitName = object.getUnit();
+            String unitName = object.getUnit().getName();
             String foodName = object.getName();
             String kcal = Integer.toString(object.getKcal());
             foodAdapter.add(quantityBearbeitet + " " + unitName + " " + foodName + " (" + kcal + " kcal)");

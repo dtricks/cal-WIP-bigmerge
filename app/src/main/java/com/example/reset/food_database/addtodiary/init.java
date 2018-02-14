@@ -12,6 +12,7 @@ import com.example.reset.food_database.addtodiary.logic;
 import com.example.reset.food_database.addtodiary.onClickListener;
 import com.example.reset.food_database.objects.DiaryEntry;
 import com.example.reset.food_database.objects.Food;
+import com.example.reset.food_database.objects.Recipes;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -64,13 +65,25 @@ public class init extends BaseActivity {
         Intent intent= this.getIntent();
         DatabaseHandler db = new DatabaseHandler(this);
         db.getReadableDatabase();
-        Food currentFood = db.getFood_new(intent.getIntExtra("handoverId", 0));
-
-        //put data into textViews
-        gui.getName_content_textview().setText(currentFood.getName());
-        gui.getKcal_content_textview().setText(String.format("%d",currentFood.getKcal()));
-        gui.getUnit_content_textview().setText(currentFood.getUnit().getName());
-        gui.getQuantity_content_textview().setText(String.format( "%1$,.2f", currentFood.getQuantity()));
+        if (intent.getBooleanExtra("isRecipe", false)==true){
+            Recipes currentRecipe=db.getRecipe_new(intent.getIntExtra("handoverId", 0));
+            //put data into textViews
+            gui.getName_content_textview().setText(currentRecipe.getName());
+            gui.getKcal_content_textview().setText(String.format("%d",currentRecipe.getKcal()));
+            //gui.getUnit_content_textview().setText(currentRecipe.getUnit().getName()); is not possible due to recipe object not having unit or quantity
+            //gui.getQuantity_content_textview().setText(String.format( "%1$,.2f", currentRecipe.getQuantity()));
+            gui.getUnit_content_textview().setText("");
+            gui.getQuantity_content_textview().setText("");
+            gui.getQuantity_textview().setText("");
+        }
+        else if (intent.getBooleanExtra("isFood", false)==true){
+            Food currentFood = db.getFood_new(intent.getIntExtra("handoverId", 0));
+            //put data into textViews
+            gui.getName_content_textview().setText(currentFood.getName());
+            gui.getKcal_content_textview().setText(String.format("%d",currentFood.getKcal()));
+            gui.getUnit_content_textview().setText(currentFood.getUnit().getName());
+            gui.getQuantity_content_textview().setText(String.format( "%1$,.2f", currentFood.getQuantity()));
+        }
     }
 
     public void setCurrentDateToTextField(Activity activity){

@@ -27,6 +27,7 @@ public class gui {
     private TextView name_content_textview;
     private TextView kcal_content_textview;
     private TextView quantity_content_textview;
+    private TextView quantity_textview;
     private TextView unit_content_textview;
     private Button submitfoodbutton;
 
@@ -49,6 +50,7 @@ public class gui {
         name_content_textview = (TextView) activity.findViewById(R.id.name_content_textview);
         kcal_content_textview = (TextView) activity.findViewById(R.id.kcal_content_textview);
         quantity_content_textview = (TextView) activity.findViewById(R.id.quantity_content_textview);
+        quantity_textview = (TextView) activity.findViewById(R.id.quantity_textview);
         unit_content_textview = (TextView) activity.findViewById(R.id.unit_content_textview);
         submitfoodbutton = (Button) activity.findViewById(R.id.submitfoodbutton);
 
@@ -71,6 +73,14 @@ public class gui {
     }
     //getter & setter
 
+
+    public TextView getQuantity_textview() {
+        return quantity_textview;
+    }
+
+    public void setQuantity_textview(TextView quantity_textview) {
+        this.quantity_textview = quantity_textview;
+    }
 
     public EditText getDate_textfield() {
         return date_textfield;

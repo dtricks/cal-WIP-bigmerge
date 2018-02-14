@@ -80,6 +80,12 @@ public class logic {
 
                         Recipes recipes = recipesList.get(selectedItemId);
 
+                        Intent alertIntent = new Intent(activity, com.example.reset.food_database.addtodiary.init.class);
+                        alertIntent.putExtra("handoverId", recipesList.get(selectedItemId).getId());
+                        alertIntent.putExtra("isRecipe", true);
+                        alertIntent.putExtra("isFood", false);
+                        activity.startActivity(alertIntent);
+
                         Toast.makeText(activity, recipes.toString(), Toast.LENGTH_LONG).show();
 
                     }

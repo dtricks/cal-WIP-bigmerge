@@ -24,6 +24,7 @@ public class DiaryEntry {
     private Unit unit;
     private double quantity;
 
+
     //getter & setter
     public double getQuantity() {
         return quantity;

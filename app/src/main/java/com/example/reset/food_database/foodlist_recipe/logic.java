@@ -94,7 +94,7 @@ public class logic {
                             rec.setFoodname(foodList.get(selectedItemId).getName());
                             rec.setKcal(foodList.get(selectedItemId).getKcal());
                             rec.setQuantity(foodList.get(selectedItemId).getQuantity());
-                            rec.setUnit(foodList.get(selectedItemId).getUnit());
+                            rec.setUnit(foodList.get(selectedItemId).getUnit().getName());
                             rec.setPortion(Double.parseDouble(edittext.getText().toString()));
                             rec.setRecipeId(currentRecipe.getId());
 
