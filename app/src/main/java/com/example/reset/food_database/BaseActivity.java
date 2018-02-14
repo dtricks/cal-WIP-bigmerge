@@ -11,7 +11,7 @@ import android.widget.Toast;
  * Created by Annabella Peekhaus
  */
 
-//logic for the menu bottom menu
+//logic for the menu bar at the top of the application
 public class BaseActivity extends AppCompatActivity  {
 
 
