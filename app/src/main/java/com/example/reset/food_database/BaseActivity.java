@@ -8,10 +8,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 /**
- * Created by Oliver Gras
+ * Created by Annabella Peekhaus
  */
 
-//logic for the menu bottom menu
+//logic for the menu bar at the top of the application
 public class BaseActivity extends AppCompatActivity  {
 
 
@@ -24,7 +24,7 @@ public class BaseActivity extends AppCompatActivity  {
         return super.onCreateOptionsMenu(menu);
     }
 
-    //leads to the activities diary, list_food, list_recipes & settings from menu bar at the top of the application
+    //leads to the activities diary, list_food, list_recipes, statistics & settings from menu bar at the top of the application
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
